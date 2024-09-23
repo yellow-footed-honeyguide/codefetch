@@ -26,6 +26,8 @@ void StatsPrinter::print_language_stats(const LanguageStats& language_stats) {
     }
 }
 
+
+
 std::string StatsPrinter::format_number(size_t number) {
     std::stringstream ss;
     ss.imbue(std::locale(""));

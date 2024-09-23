@@ -23,7 +23,7 @@ void traverse_directory(const fs::path& dir_path, ThreadSafeQueue& file_queue, s
 
             if (fs::is_directory(current_path)) {
                 traverse(current_path, depth + 1);
-            } else if (fs::is_regular_file(current_path) && is_source_file(current_path) && !current_path.filename().string().starts_with(".")) {
+            } else if (fs::is_regular_file(current_path)) {
                 file_queue.push(current_path);
                 total_files++;
             }

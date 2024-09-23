@@ -42,6 +42,7 @@ set(SOURCES
     modules/line_counter_module.cpp
     modules/language_stats.cpp
     modules/language_stats_module.cpp
+    modules/metabuild_system_module.cpp
 )
 
 # Create executable

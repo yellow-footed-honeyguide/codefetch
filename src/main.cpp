@@ -8,6 +8,7 @@
 #include "../modules/statistics_module.hpp"
 #include "../modules/line_counter_module.hpp"
 #include "../modules/language_stats_module.hpp"
+#include "../modules/metabuild_system_module.hpp"
 
 namespace fs = std::filesystem;
 
@@ -51,6 +52,7 @@ int main(int argc, char* argv[]) {
     std::vector<std::unique_ptr<StatisticsModule>> modules;
     modules.push_back(std::make_unique<LineCounterModule>());
     modules.push_back(std::make_unique<LanguageStatsModule>());
+    modules.push_back(std::make_unique<MetabuildSystemModule>());
 
     // Create and start worker threads
     unsigned int num_threads = std::thread::hardware_concurrency();
