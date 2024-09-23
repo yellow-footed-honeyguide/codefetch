@@ -9,4 +9,3 @@ void LanguageStatsModule::process_file(const fs::path& file_path) {
 void LanguageStatsModule::print_stats() const {
     StatsPrinter::print_language_stats(stats);
 }
-

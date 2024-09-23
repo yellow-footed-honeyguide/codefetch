@@ -1,10 +1,11 @@
 #include "file_utils.hpp"
 #include <functional>
+#include <algorithm>
 
 namespace FileUtils {
 
 bool is_source_file(const fs::path& path) {
-		static const std::vector<std::string> extensions = {
+    static const std::vector<std::string> extensions = {
     ".c", ".cpp", ".cxx", ".cc", ".h", ".hpp", ".hxx", ".py", ".java",
     ".js", ".ts", ".rb", ".php", ".go", ".rs", ".swift", ".kt",
     ".vim", ".txt", ".pl", ".mk", ".sh", ".m4", ".yaml", ".yml", ".md",
@@ -17,7 +18,7 @@ bool is_source_file(const fs::path& path) {
     ".gotmpl", ".jsonl", ".zsh", ".hh", ".hpp", ".hxx",
     ".mm", ".scala", ".groovy", ".f", ".f90", ".f95", ".hs",
     ".jl", ".lisp", ".lsp", ".pas", ".r", ".sql", ".tcl", ".vb", ".vhdl",
-};
+    };
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
     return std::find(extensions.begin(), extensions.end(), ext) != extensions.end();
@@ -32,7 +33,7 @@ void traverse_directory(const fs::path& dir_path, ThreadSafeQueue& file_queue, s
 
             if (fs::is_directory(current_path)) {
                 traverse(current_path, depth + 1);
-            } else if (fs::is_regular_file(current_path)) {
+            } else if (fs::is_regular_file(current_path) && is_source_file(current_path)) {
                 file_queue.push(current_path);
                 total_files++;
             }

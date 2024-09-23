@@ -17,10 +17,8 @@ private:
 
 public:
     void count_lines(const fs::path& file_path);
-    const LineCount& get_total_count() const { return total_count; }
-
-    // Static method to count lines in a single file
     static size_t count_lines_in_file(const fs::path& file_path);
+    const LineCount& get_total_count() const { return total_count; }
 };
 
 #endif // LINE_COUNTER_HPP
