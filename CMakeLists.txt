@@ -1,29 +1,75 @@
 cmake_minimum_required(VERSION 3.12)
-   project(codefetch)
+project(codefetch)
 
-   set(CMAKE_CXX_STANDARD 20)
-   set(CMAKE_CXX_STANDARD_REQUIRED ON)
-   set(CMAKE_CXX_EXTENSIONS OFF)
+# Force Ninja generator
+set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
 
-   # Add indicators
-   add_subdirectory(indicators)
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-   add_executable(codefetch
-       codefetch.cpp
-       file_utils.cpp
-       language_stats.cpp
-   )
+# Set Clang as the compiler
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 
-   target_compile_options(codefetch PRIVATE -Wall -Wextra -Wpedantic -O3 -march=native)
+# Set optimization flags for maximum performance
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -ffast-math -DNDEBUG")
 
-   find_package(Threads REQUIRED)
-   target_link_libraries(codefetch PRIVATE Threads::Threads indicators::indicators)
+# Additional performance optimizations
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -flto")
 
-   if(NOT WIN32)
-       target_link_libraries(codefetch PRIVATE stdc++fs)
-   endif()
+# Enable Link Time Optimization (LTO)
+include(CheckIPOSupported)
+check_ipo_supported(RESULT supported OUTPUT error)
+if(supported)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+    message(WARNING "IPO is not supported: ${error}")
+endif()
 
-   # Installation
-   include(GNUInstallDirs)
-   install(TARGETS codefetch
-           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# Find required packages
+find_package(Threads REQUIRED)
+
+
+# Add source files
+set(SOURCES
+    src/main.cpp
+    src/file_utils.cpp
+    src/line_counter.cpp
+    src/stats_printer.cpp
+    src/thread_safe_queue.cpp
+    modules/line_counter_module.cpp
+    modules/language_stats.cpp
+    modules/language_stats_module.cpp
+)
+
+# Create executable
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules
+)
+
+# Link libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Threads::Threads
+)
+
+if(NOT WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs)
+endif()
+
+# Add compiler warnings (but not as errors to avoid potential build issues)
+target_compile_options(${PROJECT_NAME} PRIVATE
+    -Wall -Wextra -Wpedantic
+)
+
+# Installation
+include(GNUInstallDirs)
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
