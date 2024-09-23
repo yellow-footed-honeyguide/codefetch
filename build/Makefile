@@ -198,6 +198,30 @@ codefetch.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/codefetch.cpp.s
 .PHONY : codefetch.cpp.s
 
+file_utils.o: file_utils.cpp.o
+.PHONY : file_utils.o
+
+# target to build an object file
+file_utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/file_utils.cpp.o
+.PHONY : file_utils.cpp.o
+
+file_utils.i: file_utils.cpp.i
+.PHONY : file_utils.i
+
+# target to preprocess a source file
+file_utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/file_utils.cpp.i
+.PHONY : file_utils.cpp.i
+
+file_utils.s: file_utils.cpp.s
+.PHONY : file_utils.s
+
+# target to generate assembly for a file
+file_utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/file_utils.cpp.s
+.PHONY : file_utils.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -214,6 +238,9 @@ help:
 	@echo "... codefetch.o"
 	@echo "... codefetch.i"
 	@echo "... codefetch.s"
+	@echo "... file_utils.o"
+	@echo "... file_utils.i"
+	@echo "... file_utils.s"
 .PHONY : help
 
 

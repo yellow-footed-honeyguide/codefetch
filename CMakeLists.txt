@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(codefetch codefetch.cpp)
+add_executable(codefetch
+    codefetch.cpp
+    file_utils.cpp
+)
 
 target_compile_options(codefetch PRIVATE -Wall -Wextra -Wpedantic -O3)
 
@@ -20,3 +23,4 @@ endif()
 include(GNUInstallDirs)
 install(TARGETS codefetch
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+

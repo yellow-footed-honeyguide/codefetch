@@ -30,3 +30,89 @@
 *.exe
 *.out
 *.app
+
+# Build directories
+build/
+Debug/
+Release/
+x64/
+x86/
+
+# IDE specific files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Dependency directories
+vcpkg_installed/
+
+# Code coverage
+*.gcno
+*.gcda
+*.gcov
+
+# Temporary files
+*.tmp
+*.temp
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.swp
+*~
+
+# Doxygen documentation
+doc/
+
+# Valgrind files
+callgrind.out.*
+vgcore.*
+
+# Profiling data
+gmon.out
+
+# Crash dumps
+core
+*.stackdump
+
+# Compiled Python files (if you use Python scripts in your C++ project)
+*.pyc
+__pycache__/
+
+# Compiled CUDA files
+*.cu.o
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Database files
+*.db
+*.sql
+*.sqlite

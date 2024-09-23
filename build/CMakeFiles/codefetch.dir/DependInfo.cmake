@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/honeyguide/Desktop/MyOpenSource/codefetch/codefetch.cpp" "CMakeFiles/codefetch.dir/codefetch.cpp.o" "gcc" "CMakeFiles/codefetch.dir/codefetch.cpp.o.d"
+  "/home/honeyguide/Desktop/MyOpenSource/codefetch/file_utils.cpp" "CMakeFiles/codefetch.dir/file_utils.cpp.o" "gcc" "CMakeFiles/codefetch.dir/file_utils.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/codefetch.dir/codefetch.cpp.o"
   "CMakeFiles/codefetch.dir/codefetch.cpp.o.d"
+  "CMakeFiles/codefetch.dir/file_utils.cpp.o"
+  "CMakeFiles/codefetch.dir/file_utils.cpp.o.d"
   "codefetch"
   "codefetch.pdb"
 )
