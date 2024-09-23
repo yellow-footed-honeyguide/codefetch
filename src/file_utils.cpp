@@ -4,11 +4,20 @@
 namespace FileUtils {
 
 bool is_source_file(const fs::path& path) {
-    static const std::vector<std::string> extensions = {
-        ".c", ".cpp", ".cxx", ".cc", ".h", ".hpp", ".hxx", ".py", ".java",
-        ".js", ".ts", ".rb", ".php", ".go", ".rs", ".swift", ".kt"
-        // Добавьте другие расширения по необходимости
-    };
+		static const std::vector<std::string> extensions = {
+    ".c", ".cpp", ".cxx", ".cc", ".h", ".hpp", ".hxx", ".py", ".java",
+    ".js", ".ts", ".rb", ".php", ".go", ".rs", ".swift", ".kt",
+    ".vim", ".txt", ".pl", ".mk", ".sh", ".m4", ".yaml", ".yml", ".md",
+    ".license", ".def", ".awk", ".html", ".rc", ".lua", ".csh", ".cs",
+    ".el", ".forth", ".idl", ".json", ".m", ".svg", ".sv", ".wl", ".xml",
+    ".dts", ".dtsi", ".s", ".S", ".asm", ".bash", ".pl", ".dot", ".csv",
+    ".xsl", ".y", ".l", ".ld", ".cmake", ".ac", ".uc", ".smk", ".css",
+    ".service", ".bzl", ".hex", ".ini", ".sed", ".feature", ".mat", ".rb",
+    ".toml", ".tex", ".xsd", ".proto", ".cf", ".dockerfile", ".ps1",
+    ".gotmpl", ".jsonl", ".zsh", ".hh", ".hpp", ".hxx",
+    ".mm", ".scala", ".groovy", ".f", ".f90", ".f95", ".hs",
+    ".jl", ".lisp", ".lsp", ".pas", ".r", ".sql", ".tcl", ".vb", ".vhdl",
+};
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
     return std::find(extensions.begin(), extensions.end(), ext) != extensions.end();
