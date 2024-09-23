@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(codefetch
     codefetch.cpp
     file_utils.cpp
+    language_stats.cpp
 )
 
 target_compile_options(codefetch PRIVATE -Wall -Wextra -Wpedantic -O3)

@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <iomanip>
 #include "file_utils.hpp"
+#include "language_stats.hpp"
 
 namespace fs = std::filesystem;
 
@@ -48,8 +49,11 @@ public:
     }
 };
 
+
 ThreadSafeQueue file_queue;
 LineCount total_count;
+LanguageStats language_stats;
+std::mutex stats_mutex;
 
 
 void count_lines(const fs::path& file_path, LineCount& count) {
@@ -80,7 +84,11 @@ void count_lines(const fs::path& file_path, LineCount& count) {
             }
         }
     }
+
+    std::lock_guard<std::mutex> lock(stats_mutex);
+    language_stats.add_file(file_path, count.code + count.comments);
 }
+
 
 void process_files() {
     fs::path file_path;
@@ -124,10 +132,10 @@ int main(int argc, char* argv[]) {
     for (auto& thread : threads) {
         thread.join();
     }
-
-    std::cout << "Total lines: " << std::setw(8) << total_count.code.load() << " (code) + "
+std::cout << "Total lines: " << std::setw(8) << total_count.code.load() << " (code) + "
               << std::setw(8) << total_count.comments.load() << " (comments) = "
               << std::setw(10) << (total_count.code.load() + total_count.comments.load()) << std::endl;
+    language_stats.print_stats();
 
     return 0;
 }

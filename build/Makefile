@@ -222,6 +222,30 @@ file_utils.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/file_utils.cpp.s
 .PHONY : file_utils.cpp.s
 
+language_stats.o: language_stats.cpp.o
+.PHONY : language_stats.o
+
+# target to build an object file
+language_stats.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/language_stats.cpp.o
+.PHONY : language_stats.cpp.o
+
+language_stats.i: language_stats.cpp.i
+.PHONY : language_stats.i
+
+# target to preprocess a source file
+language_stats.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/language_stats.cpp.i
+.PHONY : language_stats.cpp.i
+
+language_stats.s: language_stats.cpp.s
+.PHONY : language_stats.s
+
+# target to generate assembly for a file
+language_stats.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/codefetch.dir/build.make CMakeFiles/codefetch.dir/language_stats.cpp.s
+.PHONY : language_stats.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -241,6 +265,9 @@ help:
 	@echo "... file_utils.o"
 	@echo "... file_utils.i"
 	@echo "... file_utils.s"
+	@echo "... language_stats.o"
+	@echo "... language_stats.i"
+	@echo "... language_stats.s"
 .PHONY : help
 
 
