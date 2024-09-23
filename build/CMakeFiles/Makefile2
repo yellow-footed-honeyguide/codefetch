@@ -64,15 +64,32 @@ CMAKE_BINARY_DIR = /home/honeyguide/Desktop/MyOpenSource/codefetch/build
 
 # The main recursive "all" target.
 all: CMakeFiles/codefetch.dir/all
+all: indicators/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: indicators/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/codefetch.dir/clean
+clean: indicators/clean
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory indicators
+
+# Recursive "all" directory target.
+indicators/all:
+.PHONY : indicators/all
+
+# Recursive "preinstall" directory target.
+indicators/preinstall:
+.PHONY : indicators/preinstall
+
+# Recursive "clean" directory target.
+indicators/clean:
+.PHONY : indicators/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/codefetch.dir

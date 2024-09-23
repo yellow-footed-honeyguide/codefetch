@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include
 
 CXX_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic -O3
 

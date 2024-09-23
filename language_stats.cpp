@@ -13,17 +13,22 @@ void LanguageStats::add_file(const fs::path& file_path, size_t lines) {
 void LanguageStats::print_stats() const {
     std::cout << "\nLanguages:\n";
 
-    std::vector<std::pair<std::string, size_t>> sorted_stats(language_lines.begin(), language_lines.end());
-    std::sort(sorted_stats.begin(), sorted_stats.end(),
-              [](const auto& a, const auto& b) { return a.second > b.second; });
+    std::vector<std::pair<std::string, size_t>> sorted_stats = get_sorted_stats();
 
     for (const auto& [language, lines] : sorted_stats) {
         double percentage = (static_cast<double>(lines) / total_lines) * 100.0;
-        if (percentage >= 1.0) {  // Показываем только языки с долей >= 1%
+        if (percentage >= 1.0) {
             std::cout << std::setw(20) << std::left << language
                       << std::setw(10) << std::right << std::fixed << std::setprecision(1) << percentage << "%\n";
         }
     }
+}
+
+std::vector<std::pair<std::string, size_t>> LanguageStats::get_sorted_stats() const {
+    std::vector<std::pair<std::string, size_t>> sorted_stats(language_lines.begin(), language_lines.end());
+    std::sort(sorted_stats.begin(), sorted_stats.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+    return sorted_stats;
 }
 
 std::string LanguageStats::detect_language(const fs::path& file_path) const {

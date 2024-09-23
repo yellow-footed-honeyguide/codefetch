@@ -4,13 +4,27 @@
 CMakeFiles/codefetch.dir/codefetch.cpp.o
  /home/honeyguide/Desktop/MyOpenSource/codefetch/codefetch.cpp
  /home/honeyguide/Desktop/MyOpenSource/codefetch/file_utils.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/color.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/details/stream_helper.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/display_width.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/font_style.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/progress_bar.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/progress_type.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/setting.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/termcolor.hpp
+ /home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include/indicators/terminal_size.hpp
  /home/honeyguide/Desktop/MyOpenSource/codefetch/language_stats.hpp
  /usr/include/alloca.h
  /usr/include/asm-generic/errno-base.h
  /usr/include/asm-generic/errno.h
+ /usr/include/asm-generic/ioctl.h
+ /usr/include/asm-generic/ioctls.h
  /usr/include/asm/errno.h
+ /usr/include/asm/ioctl.h
+ /usr/include/asm/ioctls.h
  /usr/include/asm/unistd.h
  /usr/include/asm/unistd_64.h
+ /usr/include/assert.h
  /usr/include/bits/atomic_wide_counter.h
  /usr/include/bits/byteswap.h
  /usr/include/bits/confname.h
@@ -21,12 +35,23 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/bits/errno.h
  /usr/include/bits/floatn-common.h
  /usr/include/bits/floatn.h
+ /usr/include/bits/flt-eval-method.h
+ /usr/include/bits/fp-fast.h
+ /usr/include/bits/fp-logb.h
  /usr/include/bits/getopt_core.h
  /usr/include/bits/getopt_posix.h
+ /usr/include/bits/ioctl-types.h
+ /usr/include/bits/ioctls.h
+ /usr/include/bits/iscanonical.h
  /usr/include/bits/libc-header-start.h
+ /usr/include/bits/libm-simd-decl-stubs.h
  /usr/include/bits/local_lim.h
  /usr/include/bits/locale.h
  /usr/include/bits/long-double.h
+ /usr/include/bits/math-vector.h
+ /usr/include/bits/mathcalls-helper-functions.h
+ /usr/include/bits/mathcalls-narrow.h
+ /usr/include/bits/mathcalls.h
  /usr/include/bits/posix1_lim.h
  /usr/include/bits/posix2_lim.h
  /usr/include/bits/posix_opt.h
@@ -88,6 +113,7 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/bits/wordsize.h
  /usr/include/bits/xopen_lim.h
  /usr/include/c++/14/algorithm
+ /usr/include/c++/14/array
  /usr/include/c++/14/atomic
  /usr/include/c++/14/backward/binders.h
  /usr/include/c++/14/bit
@@ -107,6 +133,7 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/bits/char_traits.h
  /usr/include/c++/14/bits/charconv.h
  /usr/include/c++/14/bits/chrono.h
+ /usr/include/c++/14/bits/chrono_io.h
  /usr/include/c++/14/bits/codecvt.h
  /usr/include/c++/14/bits/concept_check.h
  /usr/include/c++/14/bits/cpp_type_traits.h
@@ -165,8 +192,10 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/bits/semaphore_base.h
  /usr/include/c++/14/bits/shared_ptr.h
  /usr/include/c++/14/bits/shared_ptr_base.h
+ /usr/include/c++/14/bits/specfun.h
  /usr/include/c++/14/bits/sstream.tcc
  /usr/include/c++/14/bits/std_abs.h
+ /usr/include/c++/14/bits/std_function.h
  /usr/include/c++/14/bits/std_mutex.h
  /usr/include/c++/14/bits/std_thread.h
  /usr/include/c++/14/bits/stl_algo.h
@@ -181,6 +210,7 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/bits/stl_iterator_base_types.h
  /usr/include/c++/14/bits/stl_pair.h
  /usr/include/c++/14/bits/stl_queue.h
+ /usr/include/c++/14/bits/stl_relops.h
  /usr/include/c++/14/bits/stl_tempbuf.h
  /usr/include/c++/14/bits/stl_uninitialized.h
  /usr/include/c++/14/bits/stl_vector.h
@@ -189,6 +219,8 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/bits/string_view.tcc
  /usr/include/c++/14/bits/stringfwd.h
  /usr/include/c++/14/bits/this_thread_sleep.h
+ /usr/include/c++/14/bits/unicode-data.h
+ /usr/include/c++/14/bits/unicode.h
  /usr/include/c++/14/bits/uniform_int_dist.h
  /usr/include/c++/14/bits/unique_lock.h
  /usr/include/c++/14/bits/unique_ptr.h
@@ -198,10 +230,14 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/bits/utility.h
  /usr/include/c++/14/bits/vector.tcc
  /usr/include/c++/14/bits/version.h
+ /usr/include/c++/14/cassert
  /usr/include/c++/14/cctype
  /usr/include/c++/14/cerrno
+ /usr/include/c++/14/charconv
+ /usr/include/c++/14/chrono
  /usr/include/c++/14/climits
  /usr/include/c++/14/clocale
+ /usr/include/c++/14/cmath
  /usr/include/c++/14/codecvt
  /usr/include/c++/14/compare
  /usr/include/c++/14/concepts
@@ -225,7 +261,9 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/ext/string_conversions.h
  /usr/include/c++/14/ext/type_traits.h
  /usr/include/c++/14/filesystem
+ /usr/include/c++/14/format
  /usr/include/c++/14/fstream
+ /usr/include/c++/14/functional
  /usr/include/c++/14/initializer_list
  /usr/include/c++/14/iomanip
  /usr/include/c++/14/ios
@@ -237,6 +275,7 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/mutex
  /usr/include/c++/14/new
  /usr/include/c++/14/numbers
+ /usr/include/c++/14/optional
  /usr/include/c++/14/ostream
  /usr/include/c++/14/pstl/execution_defs.h
  /usr/include/c++/14/pstl/glue_algorithm_defs.h
@@ -244,6 +283,7 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/queue
  /usr/include/c++/14/ratio
  /usr/include/c++/14/semaphore
+ /usr/include/c++/14/span
  /usr/include/c++/14/sstream
  /usr/include/c++/14/stdexcept
  /usr/include/c++/14/stop_token
@@ -252,10 +292,24 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/c++/14/string_view
  /usr/include/c++/14/system_error
  /usr/include/c++/14/thread
+ /usr/include/c++/14/tr1/bessel_function.tcc
+ /usr/include/c++/14/tr1/beta_function.tcc
+ /usr/include/c++/14/tr1/ell_integral.tcc
+ /usr/include/c++/14/tr1/exp_integral.tcc
+ /usr/include/c++/14/tr1/gamma.tcc
+ /usr/include/c++/14/tr1/hypergeometric.tcc
+ /usr/include/c++/14/tr1/legendre_function.tcc
+ /usr/include/c++/14/tr1/modified_bessel_func.tcc
+ /usr/include/c++/14/tr1/poly_hermite.tcc
+ /usr/include/c++/14/tr1/poly_laguerre.tcc
+ /usr/include/c++/14/tr1/riemann_zeta.tcc
+ /usr/include/c++/14/tr1/special_function_util.h
  /usr/include/c++/14/tuple
  /usr/include/c++/14/type_traits
  /usr/include/c++/14/typeinfo
  /usr/include/c++/14/unordered_map
+ /usr/include/c++/14/utility
+ /usr/include/c++/14/variant
  /usr/include/c++/14/vector
  /usr/include/c++/14/x86_64-redhat-linux/bits/atomic_word.h
  /usr/include/c++/14/x86_64-redhat-linux/bits/basic_file.h
@@ -283,8 +337,10 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/limits.h
  /usr/include/linux/close_range.h
  /usr/include/linux/errno.h
+ /usr/include/linux/ioctl.h
  /usr/include/linux/limits.h
  /usr/include/locale.h
+ /usr/include/math.h
  /usr/include/pthread.h
  /usr/include/sched.h
  /usr/include/semaphore.h
@@ -293,10 +349,12 @@ CMakeFiles/codefetch.dir/codefetch.cpp.o
  /usr/include/stdio.h
  /usr/include/stdlib.h
  /usr/include/sys/cdefs.h
+ /usr/include/sys/ioctl.h
  /usr/include/sys/select.h
  /usr/include/sys/single_threaded.h
  /usr/include/sys/syscall.h
  /usr/include/sys/time.h
+ /usr/include/sys/ttydefaults.h
  /usr/include/sys/types.h
  /usr/include/syscall.h
  /usr/include/time.h
