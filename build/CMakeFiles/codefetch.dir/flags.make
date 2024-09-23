@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/honeyguide/Desktop/MyOpenSource/codefetch/indicators/include
 
-CXX_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic -O3
+CXX_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic -O3 -march=native
 

@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.12)
        language_stats.cpp
    )
 
-   target_compile_options(codefetch PRIVATE -Wall -Wextra -Wpedantic -O3)
+   target_compile_options(codefetch PRIVATE -Wall -Wextra -Wpedantic -O3 -march=native)
 
    find_package(Threads REQUIRED)
    target_link_libraries(codefetch PRIVATE Threads::Threads indicators::indicators)

@@ -17,6 +17,8 @@
 #include <indicators/progress_bar.hpp>
 #include <iomanip>
 
+#include <cmath>
+
 namespace fs = std::filesystem;
 
 struct LineCount {
@@ -127,7 +129,7 @@ void traverse_directory(const fs::path& dir_path, int max_depth = 10) {
 }
 
 
-
+// Вспомогательная функция для форматирования чисел с разделителями
 std::string format_number(size_t number) {
     std::stringstream ss;
     ss.imbue(std::locale(""));
@@ -136,31 +138,38 @@ std::string format_number(size_t number) {
 }
 
 void print_total_lines(const LineCount& total_count) {
-    std::cout << "\033[1;34mTotal Lines:\033[0m\n";
+    std::cout << "\033[1;34mTotal Lines\033[0m\n";
     std::cout << "Code:     " << format_number(total_count.code.load()) << '\n';
     std::cout << "Comments: " << format_number(total_count.comments.load()) << '\n';
     std::cout << "Total:    " << format_number(total_count.code.load() + total_count.comments.load()) << "\n\n";
 }
 
-void print_language_stats(const LanguageStats& language_stats) {
-    std::cout << "\033[1;34mLanguages:\033[0m\n";
 
+// Функция для форматирования чисел с разделителями тысяч
+std::string format_with_commas(size_t value) {
+    std::string numStr = std::to_string(value);
+    int insertPosition = numStr.length() - 3;
+    while (insertPosition > 0) {
+        numStr.insert(insertPosition, ",");
+        insertPosition -= 3;
+    }
+    return numStr;
+}
+
+void print_language_stats(const LanguageStats& language_stats) {
+    std::cout << "\033[1;34mLanguages\033[0m\n";
     std::vector<std::pair<std::string, size_t>> sorted_stats = language_stats.get_sorted_stats();
     size_t total_lines = language_stats.get_total_lines();
 
     for (const auto& [language, lines] : sorted_stats) {
         double percentage = (static_cast<double>(lines) / total_lines) * 100.0;
-        if (percentage >= 1.0) {
-            std::cout << std::setw(20) << std::left << language;
-            std::cout << std::setw(50) << std::left;
-            int bar_width = static_cast<int>(percentage / 2);
-            std::cout << std::string(bar_width, '=') << "> ";
-            std::cout << std::fixed << std::setprecision(1) << percentage << "%\n";
+        if (percentage >= 0.1) {
+            std::cout << std::left << std::setw(20) << language 
+                      << std::right << std::setw(5) << std::fixed << std::setprecision(1) << percentage 
+                      << "% (" << format_with_commas(lines) << " lines)\n";
         }
     }
 }
-
-
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " <directory_path>" << std::endl;
@@ -184,6 +193,9 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: No source files found in the specified directory." << std::endl;
         return 1;
     }
+
+		std::locale::global(std::locale("en_US.UTF-8"));
+    std::wcout.imbue(std::locale());
 
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
