@@ -43,6 +43,7 @@ set(SOURCES
     modules/language_stats.cpp
     modules/language_stats_module.cpp
     modules/metabuild_system_module.cpp
+    modules/license_module.cpp 
 )
 
 # Create executable
