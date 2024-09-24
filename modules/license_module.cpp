@@ -1,22 +1,24 @@
-#include "license_module.hpp"
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
-void LicenseModule::process_file(const fs::path& file_path) {
+#include "license_module.hpp"
+
+void LicenseModule::process_file(const fs::path &file_path) {
     std::string filename = file_path.filename().string();
-    if (filename == "LICENSE" || filename == "LICENSE.txt" || filename == "LICENSE.md") {
+    if (filename == "LICENSE" || filename == "LICENSE.txt" || filename == "LICENSE.md" ||
+        filename == "COPYING" || filename == "README.md" || filename == "README") {
         std::ifstream file(file_path);
         if (file.is_open()) {
             std::string content((std::istreambuf_iterator<char>(file)),
-                                 std::istreambuf_iterator<char>());
+                                std::istreambuf_iterator<char>());
             detect_license(content);
         }
     }
 }
 
-void LicenseModule::detect_license(const std::string& content) {
-    for (const auto& [license, pattern] : license_patterns) {
+void LicenseModule::detect_license(const std::string &content) {
+    for (const auto &[license, pattern] : license_patterns) {
         if (std::regex_search(content, pattern)) {
             detected_license = license;
             return;

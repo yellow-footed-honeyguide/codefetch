@@ -21,7 +21,9 @@ namespace FileUtils {
     };
 
     static const std::unordered_set<std::string> special_files = {
-        "WORKSPACE", "BUILD.bazel", "meson.build", "CMakeLists.txt", "configure.ac", "Makefile"
+        "WORKSPACE", "BUILD.bazel", "meson.build", "CMakeLists.txt", 
+				"configure.ac", "Makefile", "LICENSE", "LICENSE.txt", "LICENSE.md",
+				"COPYING", "README.md", "README"
     };
 
     std::string filename = path.filename().string();
