@@ -31,8 +31,10 @@ int GitModule::commit_callback(const git_commit* commit, void* payload) {
     self->commit_count++;
 
     const git_signature* author = git_commit_author(commit);
+    std::string name(author->name);
     std::string email(author->email);
-    self->contributor_commits[email]++;
+    std::string contributor = name + " <" + email + ">";
+    self->contributor_commits[contributor]++;
 
     git_time_t time = git_commit_time(commit);
     char time_str[20];
@@ -75,8 +77,9 @@ std::string GitModule::format_number(size_t number) const {
 
 void GitModule::print_stats() const {
     std::cout << "\n\033[1;34mGIT\033[0m\n";
-    std::cout << "Total number: " << format_number(commit_count) << "\n";
-    std::cout << "First / Last commit:  " << first_commit_date << " / " << last_commit_date << "\n\n";
+    std::cout << "Commits:          " << format_number(commit_count) << "\n";
+    std::cout << "First commit:  " << first_commit_date << "\n";
+    std::cout << "Last commit:   " << last_commit_date << "\n\n";
     std::cout << "Contributors\n";
 
     std::vector<std::pair<std::string, size_t>> sorted_contributors(contributor_commits.begin(), contributor_commits.end());
@@ -84,10 +87,20 @@ void GitModule::print_stats() const {
               [](const auto& a, const auto& b) { return a.second > b.second; });
 
     size_t total_commits = commit_count;
+    size_t other_commits = 0;
+    size_t displayed_contributors = 0;
 
-    for (const auto& [email, commits] : sorted_contributors) {
-        double percentage = (static_cast<double>(commits) / total_commits) * 100.0;
-        std::cout << "<" << email << "> "
-                  << std::fixed << std::setprecision(1) << percentage << "%\n";
+    for (const auto& [contributor, commits] : sorted_contributors) {
+        if (displayed_contributors < 5) {
+            double percentage = (static_cast<double>(commits) / total_commits) * 100.0;
+            std::cout << contributor << " "
+                      << std::fixed << std::setprecision(1) << percentage << "%\n";
+            displayed_contributors++;
+        } else {
+            other_commits += commits;
+        }
     }
+
+    double other_percentage = (static_cast<double>(other_commits) / total_commits) * 100.0;
+    std::cout << "Others: " << std::fixed << std::setprecision(1) << other_percentage << "%\n";
 }
