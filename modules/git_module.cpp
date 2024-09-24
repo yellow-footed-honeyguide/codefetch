@@ -6,7 +6,11 @@
 #include <sstream>
 #include <regex>
 #include <numeric>
-#include <tabulate/table.hpp>
+#include <chrono>
+#include <atomic>
+#include <signal.h>
+
+std::atomic<bool> GitModule::interrupt_requested(false);
 
 GitModule::GitModule() : repo(nullptr), commit_count(0) {
     git_libgit2_init();
@@ -21,9 +25,14 @@ GitModule::~GitModule() {
 
 void GitModule::process_file(const fs::path& file_path) {
     if (!repo) {
-        git_repository_open(&repo, file_path.parent_path().c_str());
-        if (repo) {
+        try {
+            if (git_repository_open(&repo, file_path.parent_path().c_str()) != 0) {
+                std::cerr << "Failed to open Git repository." << std::endl;
+                return;
+            }
             process_commits();
+        } catch (const std::exception& e) {
+            std::cerr << "Error processing Git repository: " << e.what() << std::endl;
         }
     }
 }
@@ -54,14 +63,20 @@ int GitModule::commit_callback(const git_commit* commit, void* payload) {
 
 void GitModule::process_commits() {
     git_revwalk* walker;
-    git_revwalk_new(&walker, repo);
+    if (git_revwalk_new(&walker, repo) != 0) {
+        std::cerr << "Failed to create revision walker." << std::endl;
+        return;
+    }
+
     git_revwalk_push_head(walker);
 
     git_oid oid;
     size_t processed_commits = 0;
-    const size_t max_commits = 100000; // Ограничение на количество обрабатываемых коммитов
+    const size_t max_commits = 200000; // Увеличено до 200,000 коммитов
+    const auto start_time = std::chrono::steady_clock::now();
+    const auto max_duration = std::chrono::minutes(10); // Увеличено до 10 минут
 
-    while (git_revwalk_next(&oid, walker) == 0 && processed_commits < max_commits) {
+    while (git_revwalk_next(&oid, walker) == 0 && processed_commits < max_commits && !interrupt_requested.load()) {
         git_commit* commit;
         if (git_commit_lookup(&commit, repo, &oid) == 0) {
             commit_callback(commit, this);
@@ -69,15 +84,24 @@ void GitModule::process_commits() {
             processed_commits++;
         }
 
-        // Добавляем проверку на каждые 1000 коммитов
         if (processed_commits % 1000 == 0) {
             std::cout << "\rProcessed " << processed_commits << " commits..." << std::flush;
+
+            auto current_time = std::chrono::steady_clock::now();
+            if (current_time - start_time > max_duration) {
+                std::cout << "\nReached time limit. Stopping commit processing." << std::endl;
+                break;
+            }
         }
     }
 
     std::cout << "\rProcessed " << processed_commits << " commits. Done.           " << std::endl;
 
     git_revwalk_free(walker);
+}
+
+void GitModule::interrupt() {
+    interrupt_requested.store(true);
 }
 
 std::string GitModule::format_number(size_t number) const {

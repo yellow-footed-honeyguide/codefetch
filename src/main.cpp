@@ -12,6 +12,7 @@
 #include "metabuild_system_module.hpp"
 #include "license_module.hpp"
 #include "modules/git_module.hpp"
+#include "signal_handler.hpp"
 
 namespace fs = std::filesystem;
 
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]) {
         std::cerr << "Usage: " << argv[0] << " <directory_path>" << std::endl;
         return 1;
     }
+
+    setup_signal_handler();
 
     fs::path dir_path(argv[1]);
     if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
@@ -60,7 +63,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    file_queue.finish(); 
+    file_queue.finish();
 
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;

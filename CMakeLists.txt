@@ -42,6 +42,7 @@ set(SOURCES
     src/line_counter.cpp
     src/stats_printer.cpp
     src/thread_safe_queue.cpp
+    src/signal_handler.cpp
     modules/line_counter_module.cpp
     modules/language_stats.cpp
     modules/language_stats_module.cpp
