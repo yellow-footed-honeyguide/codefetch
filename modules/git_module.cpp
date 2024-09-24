@@ -5,6 +5,8 @@
 #include <ctime>
 #include <sstream>
 #include <regex>
+#include <numeric>
+#include <tabulate/table.hpp>
 
 GitModule::GitModule() : repo(nullptr), commit_count(0) {
     git_libgit2_init();
@@ -33,8 +35,7 @@ int GitModule::commit_callback(const git_commit* commit, void* payload) {
     const git_signature* author = git_commit_author(commit);
     std::string name(author->name);
     std::string email(author->email);
-    std::string contributor = name + " <" + email + ">";
-    self->contributor_commits[contributor]++;
+    self->contributor_commits[name][email]++;
 
     git_time_t time = git_commit_time(commit);
     char time_str[20];
@@ -57,13 +58,24 @@ void GitModule::process_commits() {
     git_revwalk_push_head(walker);
 
     git_oid oid;
-    while (git_revwalk_next(&oid, walker) == 0) {
+    size_t processed_commits = 0;
+    const size_t max_commits = 100000; // Ограничение на количество обрабатываемых коммитов
+
+    while (git_revwalk_next(&oid, walker) == 0 && processed_commits < max_commits) {
         git_commit* commit;
         if (git_commit_lookup(&commit, repo, &oid) == 0) {
             commit_callback(commit, this);
             git_commit_free(commit);
+            processed_commits++;
+        }
+
+        // Добавляем проверку на каждые 1000 коммитов
+        if (processed_commits % 1000 == 0) {
+            std::cout << "\rProcessed " << processed_commits << " commits..." << std::flush;
         }
     }
+
+    std::cout << "\rProcessed " << processed_commits << " commits. Done.           " << std::endl;
 
     git_revwalk_free(walker);
 }
@@ -76,31 +88,77 @@ std::string GitModule::format_number(size_t number) const {
 }
 
 void GitModule::print_stats() const {
-    std::cout << "\n\033[1;34mGIT\033[0m\n";
-    std::cout << "Commits:          " << format_number(commit_count) << "\n";
-    std::cout << "First commit:  " << first_commit_date << "\n";
-    std::cout << "Last commit:   " << last_commit_date << "\n\n";
-    std::cout << "Contributors\n";
+    tabulate::Table git_table;
 
-    std::vector<std::pair<std::string, size_t>> sorted_contributors(contributor_commits.begin(), contributor_commits.end());
+    git_table.add_row({"Commits", format_number(commit_count)});
+    git_table.add_row({"First commit", first_commit_date});
+    git_table.add_row({"Last commit", last_commit_date});
+
+    git_table.format()
+        .font_style({tabulate::FontStyle::bold})
+        .border_top(" ")
+        .border_bottom(" ")
+        .border_left(" ")
+        .border_right(" ")
+        .corner(" ");
+
+    std::cout << "\n\033[1;34mGIT\033[0m\n";
+    std::cout << git_table << "\n";
+
+    tabulate::Table contributors_table;
+    contributors_table.add_row({"Name", "Email", "Commits", "Percentage"});
+
+    std::vector<std::tuple<std::string, std::string, size_t>> sorted_contributors;
+    for (const auto& [name, emails] : contributor_commits) {
+        for (const auto& [email, count] : emails) {
+            sorted_contributors.emplace_back(name, email, count);
+        }
+    }
+
     std::sort(sorted_contributors.begin(), sorted_contributors.end(),
-              [](const auto& a, const auto& b) { return a.second > b.second; });
+              [](const auto& a, const auto& b) { return std::get<2>(a) > std::get<2>(b); });
 
     size_t total_commits = commit_count;
     size_t other_commits = 0;
     size_t displayed_contributors = 0;
 
-    for (const auto& [contributor, commits] : sorted_contributors) {
+    for (const auto& [name, email, commits] : sorted_contributors) {
         if (displayed_contributors < 5) {
             double percentage = (static_cast<double>(commits) / total_commits) * 100.0;
-            std::cout << contributor << " "
-                      << std::fixed << std::setprecision(1) << percentage << "%\n";
+            contributors_table.add_row({
+                name,
+                email,
+                format_number(commits),
+                std::to_string(percentage).substr(0, 5) + "%"
+            });
             displayed_contributors++;
         } else {
             other_commits += commits;
         }
+
+        if (displayed_contributors >= 5 && other_commits > 0) {
+            break;
+        }
     }
 
-    double other_percentage = (static_cast<double>(other_commits) / total_commits) * 100.0;
-    std::cout << "Others: " << std::fixed << std::setprecision(1) << other_percentage << "%\n";
+    if (other_commits > 0) {
+        double other_percentage = (static_cast<double>(other_commits) / total_commits) * 100.0;
+        contributors_table.add_row({
+            "Others",
+            "",
+            format_number(other_commits),
+            std::to_string(other_percentage).substr(0, 5) + "%"
+        });
+    }
+
+    contributors_table.format()
+        .font_style({tabulate::FontStyle::bold})
+        .border_top("-")
+        .border_bottom("-")
+        .border_left("|")
+        .border_right("|")
+        .corner("+");
+
+    std::cout << "Contributors\n";
+    std::cout << contributors_table << "\n";
 }
