@@ -17,6 +17,7 @@ private:
 
     void process_commits();
     static int commit_callback(const git_commit* commit, void* payload);
+    std::string format_number(size_t number) const;
 
 public:
     GitModule();
