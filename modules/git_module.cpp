@@ -87,9 +87,18 @@ std::string GitModule::format_number(size_t number) const {
     return ss.str();
 }
 
+std::string GitModule::truncate_string(const std::string& str, size_t width) const {
+    if (str.length() > width) {
+        return str.substr(0, width - 3) + "...";
+    }
+    return str;
+}
+
 void GitModule::print_stats() const {
     const int first_column_width = 15;
     const int second_column_width = 25;
+    const int name_width = 20;
+    const int email_width = 30;
 
     std::cout << "\n\033[1;34mGIT\033[0m\n";
     std::cout << std::left << std::setw(first_column_width) << "Commits"
@@ -101,8 +110,8 @@ void GitModule::print_stats() const {
 
     std::cout << "\033[1mContributors\033[0m\n";
     std::cout << std::string(80, '-') << "\n";
-    std::cout << std::left << std::setw(20) << "Name"
-              << std::setw(30) << "Email"
+    std::cout << std::left << std::setw(name_width) << "Name"
+              << std::setw(email_width) << "Email"
               << std::right << std::setw(10) << "Commits"
               << std::setw(15) << "Percentage" << "\n";
     std::cout << std::string(80, '-') << "\n";
@@ -124,8 +133,8 @@ void GitModule::print_stats() const {
     for (const auto& [name, email, commits] : sorted_contributors) {
         if (displayed_contributors < 5) {
             double percentage = (static_cast<double>(commits) / total_commits) * 100.0;
-            std::cout << std::left << std::setw(20) << name
-                      << std::setw(30) << email
+            std::cout << std::left << std::setw(name_width) << truncate_string(name, name_width)
+                      << std::setw(email_width) << truncate_string(email, email_width)
                       << std::right << std::setw(10) << format_number(commits)
                       << std::setw(14) << std::fixed << std::setprecision(2) << percentage << "%\n";
             displayed_contributors++;
@@ -140,12 +149,11 @@ void GitModule::print_stats() const {
 
     if (other_commits > 0) {
         double other_percentage = (static_cast<double>(other_commits) / total_commits) * 100.0;
-        std::cout << std::left << std::setw(20) << "Others"
-                  << std::setw(30) << ""
+        std::cout << std::left << std::setw(name_width) << "Others"
+                  << std::setw(email_width) << ""
                   << std::right << std::setw(10) << format_number(other_commits)
                   << std::setw(14) << std::fixed << std::setprecision(2) << other_percentage << "%\n";
     }
 
     std::cout << std::string(80, '-') << "\n";
 }
-
