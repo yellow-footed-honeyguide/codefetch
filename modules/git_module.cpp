@@ -88,25 +88,24 @@ std::string GitModule::format_number(size_t number) const {
 }
 
 void GitModule::print_stats() const {
-    tabulate::Table git_table;
-
-    git_table.add_row({"Commits", format_number(commit_count)});
-    git_table.add_row({"First commit", first_commit_date});
-    git_table.add_row({"Last commit", last_commit_date});
-
-    git_table.format()
-        .font_style({tabulate::FontStyle::bold})
-        .border_top(" ")
-        .border_bottom(" ")
-        .border_left(" ")
-        .border_right(" ")
-        .corner(" ");
+    const int first_column_width = 15;
+    const int second_column_width = 25;
 
     std::cout << "\n\033[1;34mGIT\033[0m\n";
-    std::cout << git_table << "\n";
+    std::cout << std::left << std::setw(first_column_width) << "Commits"
+              << std::right << std::setw(second_column_width) << format_number(commit_count) << "\n";
+    std::cout << std::left << std::setw(first_column_width) << "First commit"
+              << std::right << std::setw(second_column_width) << first_commit_date << "\n";
+    std::cout << std::left << std::setw(first_column_width) << "Last commit"
+              << std::right << std::setw(second_column_width) << last_commit_date << "\n\n";
 
-    tabulate::Table contributors_table;
-    contributors_table.add_row({"Name", "Email", "Commits", "Percentage"});
+    std::cout << "\033[1mContributors\033[0m\n";
+    std::cout << std::string(80, '-') << "\n";
+    std::cout << std::left << std::setw(20) << "Name"
+              << std::setw(30) << "Email"
+              << std::right << std::setw(10) << "Commits"
+              << std::setw(15) << "Percentage" << "\n";
+    std::cout << std::string(80, '-') << "\n";
 
     std::vector<std::tuple<std::string, std::string, size_t>> sorted_contributors;
     for (const auto& [name, emails] : contributor_commits) {
@@ -125,12 +124,10 @@ void GitModule::print_stats() const {
     for (const auto& [name, email, commits] : sorted_contributors) {
         if (displayed_contributors < 5) {
             double percentage = (static_cast<double>(commits) / total_commits) * 100.0;
-            contributors_table.add_row({
-                name,
-                email,
-                format_number(commits),
-                std::to_string(percentage).substr(0, 5) + "%"
-            });
+            std::cout << std::left << std::setw(20) << name
+                      << std::setw(30) << email
+                      << std::right << std::setw(10) << format_number(commits)
+                      << std::setw(14) << std::fixed << std::setprecision(2) << percentage << "%\n";
             displayed_contributors++;
         } else {
             other_commits += commits;
@@ -143,22 +140,12 @@ void GitModule::print_stats() const {
 
     if (other_commits > 0) {
         double other_percentage = (static_cast<double>(other_commits) / total_commits) * 100.0;
-        contributors_table.add_row({
-            "Others",
-            "",
-            format_number(other_commits),
-            std::to_string(other_percentage).substr(0, 5) + "%"
-        });
+        std::cout << std::left << std::setw(20) << "Others"
+                  << std::setw(30) << ""
+                  << std::right << std::setw(10) << format_number(other_commits)
+                  << std::setw(14) << std::fixed << std::setprecision(2) << other_percentage << "%\n";
     }
 
-    contributors_table.format()
-        .font_style({tabulate::FontStyle::bold})
-        .border_top("-")
-        .border_bottom("-")
-        .border_left("|")
-        .border_right("|")
-        .corner("+");
-
-    std::cout << "Contributors\n";
-    std::cout << contributors_table << "\n";
+    std::cout << std::string(80, '-') << "\n";
 }
+
