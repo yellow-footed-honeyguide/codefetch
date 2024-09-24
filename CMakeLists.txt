@@ -35,18 +35,6 @@ find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGIT2 REQUIRED libgit2)
 
-# Find tabulate
-find_path(TABULATE_INCLUDE_DIRS "tabulate/table.hpp"
-    PATHS
-        ${CMAKE_CURRENT_SOURCE_DIR}/extern/tabulate/include
-        /usr/include
-        /usr/local/include
-    )
-
-if(NOT TABULATE_INCLUDE_DIRS)
-    message(FATAL_ERROR "tabulate headers not found. Please install tabulate or specify its location.")
-endif()
-
 # Add source files
 set(SOURCES
     src/main.cpp
@@ -71,7 +59,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/modules
     ${LIBGIT2_INCLUDE_DIRS}
-    ${TABULATE_INCLUDE_DIRS}
 )
 
 # Link libraries
