@@ -31,6 +31,9 @@ endif()
 # Find required packages
 find_package(Threads REQUIRED)
 
+# Use pkg-config to find LibGit2
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBGIT2 REQUIRED libgit2)
 
 # Add source files
 set(SOURCES
@@ -43,7 +46,8 @@ set(SOURCES
     modules/language_stats.cpp
     modules/language_stats_module.cpp
     modules/metabuild_system_module.cpp
-    modules/license_module.cpp 
+    modules/license_module.cpp
+    modules/git_module.cpp
 )
 
 # Create executable
@@ -54,11 +58,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/modules
+    ${LIBGIT2_INCLUDE_DIRS}
 )
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Threads::Threads
+    ${LIBGIT2_LIBRARIES}
 )
 
 if(NOT WIN32)
@@ -75,3 +81,4 @@ include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
