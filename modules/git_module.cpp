@@ -148,7 +148,7 @@ void GitModule::print_stats() const {
 
     for (size_t i = 0; i < top_contributors; ++i) {
         const auto& [name, percentage, commits] = contributor_stats[i];
-        std::cout << "  ╰─ " << std::left << std::setw(14) << OutputFormatter::truncate(name, 20)
+        std::cout << "  ╰─ " << std::left << std::setw(20) << OutputFormatter::truncate(name, 20)
                   << ": " << std::right << std::setw(5) << OutputFormatter::format_percentage(percentage)
                   << "  (" << OutputFormatter::format_large_number(commits) << " commits)" << std::endl;
     }
@@ -160,7 +160,7 @@ void GitModule::print_stats() const {
     }
 
     if (contributor_stats.size() > 5) {
-        std::cout << "  ╰─ " << std::left << std::setw(14) << "Others"
+        std::cout << "  ╰─ " << std::left << std::setw(20) << "Others"
                   << ": " << std::right << std::setw(5) << OutputFormatter::format_percentage(others_percentage)
                   << "  (" << OutputFormatter::format_large_number(others_commits) << " commits)" << std::endl;
     }

@@ -30,7 +30,7 @@ void OutputFormatter::print_contributor_stats(const std::vector<std::pair<std::s
 
 std::string OutputFormatter::format_percentage(double percentage) {
     std::ostringstream oss;
-    oss << std::fixed << std::setprecision(1) << percentage << "%";
+    oss << std::fixed << std::setprecision(1) << std::setw(5) << percentage << "%";
     return oss.str();
 }
 
