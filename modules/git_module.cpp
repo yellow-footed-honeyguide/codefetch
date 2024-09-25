@@ -9,6 +9,7 @@
 #include <chrono>
 #include <atomic>
 #include <signal.h>
+#include "../src/output_formatter.hpp"
 
 std::atomic<bool> GitModule::interrupt_requested(false);
 
@@ -119,65 +120,34 @@ std::string GitModule::truncate_string(const std::string& str, size_t width) con
 }
 
 void GitModule::print_stats() const {
-    const int first_column_width = 15;
-    const int second_column_width = 25;
-    const int name_width = 20;
-    const int email_width = 30;
+    std::vector<std::pair<std::string, std::string>> git_items = {
+        {"Commits", OutputFormatter::format_large_number(commit_count)},
+        {"First", first_commit_date.substr(0, 10)},
+        {"Last", last_commit_date.substr(0, 10)}
+    };
+    OutputFormatter::print_section("Git Stats", "♦", git_items);
 
-    std::cout << "\n\033[1;34mGIT\033[0m\n";
-    std::cout << std::left << std::setw(first_column_width) << "Commits"
-              << std::right << std::setw(second_column_width) << format_number(commit_count) << "\n";
-    std::cout << std::left << std::setw(first_column_width) << "First commit"
-              << std::right << std::setw(second_column_width) << first_commit_date << "\n";
-    std::cout << std::left << std::setw(first_column_width) << "Last commit"
-              << std::right << std::setw(second_column_width) << last_commit_date << "\n\n";
-
-    std::cout << "\033[1mContributors\033[0m\n";
-    std::cout << std::string(80, '-') << "\n";
-    std::cout << std::left << std::setw(name_width) << "Name"
-              << std::setw(email_width) << "Email"
-              << std::right << std::setw(10) << "Commits"
-              << std::setw(15) << "Percentage" << "\n";
-    std::cout << std::string(80, '-') << "\n";
-
-    std::vector<std::tuple<std::string, std::string, size_t>> sorted_contributors;
+    std::vector<std::pair<std::string, double>> contributor_stats;
     for (const auto& [name, emails] : contributor_commits) {
+        size_t total_commits = 0;
         for (const auto& [email, count] : emails) {
-            sorted_contributors.emplace_back(name, email, count);
+            total_commits += count;
         }
+        double percentage = (static_cast<double>(total_commits) / commit_count) * 100.0;
+        contributor_stats.emplace_back(name, percentage);
     }
 
-    std::sort(sorted_contributors.begin(), sorted_contributors.end(),
-              [](const auto& a, const auto& b) { return std::get<2>(a) > std::get<2>(b); });
+    std::sort(contributor_stats.begin(), contributor_stats.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
 
-    size_t total_commits = commit_count;
-    size_t other_commits = 0;
-    size_t displayed_contributors = 0;
-
-    for (const auto& [name, email, commits] : sorted_contributors) {
-        if (displayed_contributors < 5) {
-            double percentage = (static_cast<double>(commits) / total_commits) * 100.0;
-            std::cout << std::left << std::setw(name_width) << truncate_string(name, name_width)
-                      << std::setw(email_width) << truncate_string(email, email_width)
-                      << std::right << std::setw(10) << format_number(commits)
-                      << std::setw(14) << std::fixed << std::setprecision(2) << percentage << "%\n";
-            displayed_contributors++;
-        } else {
-            other_commits += commits;
+    if (contributor_stats.size() > 3) {
+        double others_percentage = 0;
+        for (size_t i = 3; i < contributor_stats.size(); ++i) {
+            others_percentage += contributor_stats[i].second;
         }
-
-        if (displayed_contributors >= 5 && other_commits > 0) {
-            break;
-        }
+        contributor_stats.resize(3);
+        contributor_stats.emplace_back("Others", others_percentage);
     }
 
-    if (other_commits > 0) {
-        double other_percentage = (static_cast<double>(other_commits) / total_commits) * 100.0;
-        std::cout << std::left << std::setw(name_width) << "Others"
-                  << std::setw(email_width) << ""
-                  << std::right << std::setw(10) << format_number(other_commits)
-                  << std::setw(14) << std::fixed << std::setprecision(2) << other_percentage << "%\n";
-    }
-
-    std::cout << std::string(80, '-') << "\n";
+    OutputFormatter::print_contributor_stats(contributor_stats);
 }

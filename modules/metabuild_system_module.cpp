@@ -1,6 +1,7 @@
 #include "metabuild_system_module.hpp"
 #include <iostream>
 #include <algorithm>
+#include "../src/output_formatter.hpp"
 
 void MetabuildSystemModule::process_file(const fs::path& file_path) {
     std::string full_path = fs::canonical(file_path).string();
@@ -14,13 +15,11 @@ void MetabuildSystemModule::process_file(const fs::path& file_path) {
 }
 
 void MetabuildSystemModule::print_stats() const {
-    std::cout << "\n\033[1;34mMetabuild System\033[0m\n";
-    if (detected_systems.empty()) {
-        std::cout << "None detected\n";
-    } else {
-        for (const auto& system : detected_systems) {
-            std::cout << system << '\n';
-        }
+    if (!detected_systems.empty()) {
+        std::vector<std::pair<std::string, std::string>> items = {
+            {"Build", *detected_systems.begin()}
+        };
+        OutputFormatter::print_section("Build System", "⚒", items);
     }
-    std::cout << '\n';
 }
+

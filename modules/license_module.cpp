@@ -3,6 +3,8 @@
 #include <sstream>
 
 #include "license_module.hpp"
+#include "../src/output_formatter.hpp"
+
 
 void LicenseModule::process_file(const fs::path &file_path) {
     std::string filename = file_path.filename().string();
@@ -27,10 +29,11 @@ void LicenseModule::detect_license(const std::string &content) {
 }
 
 void LicenseModule::print_stats() const {
-    std::cout << "\033[1;34mLicense\033[0m\n";
-    if (detected_license.empty()) {
-        std::cout << "None detected\n";
-    } else {
-        std::cout << detected_license << "\n";
+    if (!detected_license.empty()) {
+        std::vector<std::pair<std::string, std::string>> items = {
+            {"License", detected_license}
+        };
+        OutputFormatter::print_section("License", "§", items);
     }
 }
+
