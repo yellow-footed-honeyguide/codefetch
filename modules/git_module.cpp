@@ -127,27 +127,43 @@ void GitModule::print_stats() const {
     };
     OutputFormatter::print_section("Git Stats", "♦", git_items);
 
-    std::vector<std::pair<std::string, double>> contributor_stats;
+    std::vector<std::tuple<std::string, double, size_t>> contributor_stats;
     for (const auto& [name, emails] : contributor_commits) {
         size_t total_commits = 0;
         for (const auto& [email, count] : emails) {
             total_commits += count;
         }
         double percentage = (static_cast<double>(total_commits) / commit_count) * 100.0;
-        contributor_stats.emplace_back(name, percentage);
+        contributor_stats.emplace_back(name, percentage, total_commits);
     }
 
     std::sort(contributor_stats.begin(), contributor_stats.end(),
-              [](const auto& a, const auto& b) { return a.second > b.second; });
+              [](const auto& a, const auto& b) { return std::get<1>(a) > std::get<1>(b); });
 
-    if (contributor_stats.size() > 3) {
-        double others_percentage = 0;
-        for (size_t i = 3; i < contributor_stats.size(); ++i) {
-            others_percentage += contributor_stats[i].second;
-        }
-        contributor_stats.resize(3);
-        contributor_stats.emplace_back("Others", others_percentage);
+    std::cout << "☺ Top Contributors" << std::endl;
+
+    size_t top_contributors = std::min(contributor_stats.size(), static_cast<size_t>(5));
+    double others_percentage = 0.0;
+    size_t others_commits = 0;
+
+    for (size_t i = 0; i < top_contributors; ++i) {
+        const auto& [name, percentage, commits] = contributor_stats[i];
+        std::cout << "  ╰─ " << std::left << std::setw(14) << OutputFormatter::truncate(name, 20)
+                  << ": " << std::right << std::setw(5) << OutputFormatter::format_percentage(percentage)
+                  << "  (" << OutputFormatter::format_large_number(commits) << " commits)" << std::endl;
     }
 
-    OutputFormatter::print_contributor_stats(contributor_stats);
+    for (size_t i = top_contributors; i < contributor_stats.size(); ++i) {
+        const auto& [_, percentage, commits] = contributor_stats[i];
+        others_percentage += percentage;
+        others_commits += commits;
+    }
+
+    if (contributor_stats.size() > 5) {
+        std::cout << "  ╰─ " << std::left << std::setw(14) << "Others"
+                  << ": " << std::right << std::setw(5) << OutputFormatter::format_percentage(others_percentage)
+                  << "  (" << OutputFormatter::format_large_number(others_commits) << " commits)" << std::endl;
+    }
+
+    std::cout << std::endl;
 }

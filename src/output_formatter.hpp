@@ -14,8 +14,6 @@ public:
     static void print_language_stats(const std::vector<std::pair<std::string, double>>& stats, size_t total_lines);
     static void print_contributor_stats(const std::vector<std::pair<std::string, double>>& stats);
     static std::string format_large_number(size_t number);
-
-private:
     static std::string format_percentage(double percentage);
     static std::string truncate(const std::string& str, size_t width);
 };
