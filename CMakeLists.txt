@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(codefetch)
+project(codefetch VERSION 0.9.0)
 
 # Force Ninja generator
 set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)

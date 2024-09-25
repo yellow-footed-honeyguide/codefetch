@@ -1,6 +1,3 @@
-# Prerequisites
-*.d
-
 # Compiled Object files
 *.slo
 *.lo
@@ -10,21 +7,6 @@
 # Precompiled Headers
 *.gch
 *.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
 
 # Executables
 *.exe
@@ -54,11 +36,6 @@ Makefile
 
 # Dependency directories
 vcpkg_installed/
-
-# Code coverage
-*.gcno
-*.gcda
-*.gcov
 
 # Temporary files
 *.tmp
@@ -95,24 +72,5 @@ gmon.out
 core
 *.stackdump
 
-# Compiled Python files (if you use Python scripts in your C++ project)
-*.pyc
-__pycache__/
-
-# Compiled CUDA files
-*.cu.o
-
-# Package files
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-
-# Database files
-*.db
-*.sql
-*.sqlite
+# Ctags
+tags
