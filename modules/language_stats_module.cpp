@@ -11,10 +11,24 @@ void LanguageStatsModule::print_stats() const {
     auto sorted_stats = stats.get_sorted_stats();
     std::vector<std::pair<std::string, double>> formatted_stats;
 
+    double total_percentage = 0.0;
+    size_t total_lines = stats.get_total_lines();
+    size_t top_languages = 0;
+
+    // Process top 5 languages (excluding "Other")
     for (const auto& [language, lines] : sorted_stats) {
-        double percentage = (static_cast<double>(lines) / stats.get_total_lines()) * 100.0;
-        formatted_stats.emplace_back(language, percentage);
+        if (top_languages >= 5) break;
+        if (language != "Other") {
+            double percentage = (static_cast<double>(lines) / total_lines) * 100.0;
+            formatted_stats.emplace_back(language, percentage);
+            total_percentage += percentage;
+            ++top_languages;
+        }
     }
 
-    OutputFormatter::print_language_stats(formatted_stats, stats.get_total_lines());
+    // Add "Others" category
+    double others_percentage = 100.0 - total_percentage;
+    formatted_stats.emplace_back("Others", others_percentage);
+
+    OutputFormatter::print_language_stats(formatted_stats, total_lines);
 }
