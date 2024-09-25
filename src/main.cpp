@@ -41,8 +41,14 @@ int main(int argc, char* argv[]) {
     bool show_languages = false;
     app.add_flag("-l,--languages", show_languages, "Show only language statistics");
 
+    bool show_metabuild_system = false;
+    app.add_flag("-m,--metabuild_system", show_metabuild_system, 
+										"Show only metabuild system information");
+
     bool show_license = false;
     app.add_flag("-i,--license", show_license, "Show only license information");
+
+
 
     CLI11_PARSE(app, argc, argv);
 
@@ -63,6 +69,9 @@ int main(int argc, char* argv[]) {
     } else {
         if (show_languages) {
             modules.push_back(std::make_unique<LanguageStatsModule>());
+        }
+        if (show_metabuild_system) {
+            modules.push_back(std::make_unique<MetabuildSystemModule>());
         }
         if (show_license) {
             modules.push_back(std::make_unique<LicenseModule>());
