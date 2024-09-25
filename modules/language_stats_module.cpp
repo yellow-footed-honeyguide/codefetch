@@ -1,5 +1,5 @@
 #include "language_stats_module.hpp"
-#include "../src/line_counter.hpp"
+#include "../src/line_count_util.hpp"
 #include "../src/stats_printer.hpp"
 
 void LanguageStatsModule::process_file(const fs::path& file_path) {

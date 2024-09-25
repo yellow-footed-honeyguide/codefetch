@@ -1,7 +1,7 @@
 #ifndef STATS_PRINTER_HPP
 #define STATS_PRINTER_HPP
 
-#include "line_counter.hpp"
+#include "line_count_util.hpp"
 #include "language_stats.hpp"
 
 class StatsPrinter {

@@ -1,4 +1,4 @@
-#include "line_counter.hpp"
+#include "line_count_util.hpp"
 #include <fstream>
 #include <string>
 #include <algorithm>

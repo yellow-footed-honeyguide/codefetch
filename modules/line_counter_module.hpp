@@ -2,7 +2,7 @@
 #define LINE_COUNTER_MODULE_HPP
 
 #include "statistics_module.hpp"
-#include "../src/line_counter.hpp"
+#include "../src/line_count_util.hpp"
 
 class LineCounterModule : public StatisticsModule {
 private:

@@ -50,7 +50,7 @@ FetchContent_MakeAvailable(cli11)
 set(SOURCES
     src/main.cpp
     src/file_utils.cpp
-    src/line_counter.cpp
+    src/line_count_util.cpp
     src/stats_printer.cpp
     src/thread_safe_queue.cpp
     src/signal_handler.cpp
