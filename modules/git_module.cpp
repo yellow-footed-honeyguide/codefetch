@@ -27,7 +27,7 @@ void GitModule::process_file(const fs::path& file_path) {
     if (!repo) {
         try {
             if (git_repository_open(&repo, file_path.parent_path().c_str()) != 0) {
-                std::cerr << "Failed to open Git repository." << std::endl;
+                //std::cerr << "Failed to open Git repository." << std::endl;
                 return;
             }
             process_commits();
@@ -85,7 +85,7 @@ void GitModule::process_commits() {
         }
 
         if (processed_commits % 1000 == 0) {
-            std::cout << "\rProcessed " << processed_commits << " commits..." << std::flush;
+            //std::cout << "\rProcessed " << processed_commits << " commits..." << std::flush;
 
             auto current_time = std::chrono::steady_clock::now();
             if (current_time - start_time > max_duration) {
@@ -95,7 +95,7 @@ void GitModule::process_commits() {
         }
     }
 
-    std::cout << "\rProcessed " << processed_commits << " commits. Done.           " << std::endl;
+    //std::cout << "\rProcessed " << processed_commits << " commits. Done.           " << std::endl;
 
     git_revwalk_free(walker);
 }
