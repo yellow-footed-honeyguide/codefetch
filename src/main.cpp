@@ -39,18 +39,21 @@ int main(int argc, char *argv[]) {
     std::string dir_path;
     app.add_option("directory", dir_path, "Directory to analyze")->required();
 
+    bool show_line_counter = false;
+    app.add_flag("-c,--line_counter", show_line_counter, "Show line counter statistics");
+
     bool show_languages = false;
-    app.add_flag("-l,--languages", show_languages, "Show only language statistics");
+    app.add_flag("-l,--languages", show_languages, "Show language statistics");
+
+    bool show_git = false;
+    app.add_flag("-g,--git-statistics", show_git, "Show git statistics information");
 
     bool show_metabuild_system = false;
     app.add_flag("-m,--metabuild_system", show_metabuild_system,
-                 "Show only metabuild system information");
+                 "Show metabuild system information");
 
     bool show_license = false;
-    app.add_flag("-i,--license", show_license, "Show only license information");
-
-    bool show_git = false;
-    app.add_flag("-g,--git-statistics", show_git, "Show only git statistics information");
+    app.add_flag("-i,--license", show_license, "Show license information");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -62,13 +65,17 @@ int main(int argc, char *argv[]) {
     setup_signal_handler();
 
     std::vector<std::unique_ptr<StatisticsModule>> modules;
-    if (!show_languages && !show_license && !show_metabuild_system && !show_git) {
+    if (!show_languages && !show_license && !show_metabuild_system
+									 	&& !show_git && !show_line_counter) {
         modules.push_back(std::make_unique<LineCounterModule>());
         modules.push_back(std::make_unique<LanguageStatsModule>());
         modules.push_back(std::make_unique<GitModule>());
         modules.push_back(std::make_unique<MetabuildSystemModule>());
         modules.push_back(std::make_unique<LicenseModule>());
     } else {
+        if (show_line_counter) {
+            modules.push_back(std::make_unique<LineCounterModule>());
+        }
         if (show_languages) {
             modules.push_back(std::make_unique<LanguageStatsModule>());
         }

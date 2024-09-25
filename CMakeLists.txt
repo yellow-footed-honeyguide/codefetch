@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(codefetch VERSION 0.9.6)
+project(codefetch VERSION 0.9.7)
 add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 
 # Remove forced Ninja generator
