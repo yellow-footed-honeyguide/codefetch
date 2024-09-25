@@ -65,9 +65,9 @@ int main(int argc, char *argv[]) {
     if (!show_languages && !show_license && !show_metabuild_system && !show_git) {
         modules.push_back(std::make_unique<LineCounterModule>());
         modules.push_back(std::make_unique<LanguageStatsModule>());
+        modules.push_back(std::make_unique<GitModule>());
         modules.push_back(std::make_unique<MetabuildSystemModule>());
         modules.push_back(std::make_unique<LicenseModule>());
-        modules.push_back(std::make_unique<GitModule>());
     } else {
         if (show_languages) {
             modules.push_back(std::make_unique<LanguageStatsModule>());
