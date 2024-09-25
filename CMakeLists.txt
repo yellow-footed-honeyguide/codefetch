@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.12)
 project(codefetch VERSION 0.9.0)
+add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 
-# Force Ninja generator
-set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
+# Remove forced Ninja generator
+# set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Set Clang as the compiler
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
+# Set Clang as the compiler (commented out for now)
+# set(CMAKE_C_COMPILER clang)
+# set(CMAKE_CXX_COMPILER clang++)
 
 # Set optimization flags for maximum performance
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -ffast-math -DNDEBUG")
@@ -28,12 +29,22 @@ else()
     message(WARNING "IPO is not supported: ${error}")
 endif()
 
+
 # Find required packages
 find_package(Threads REQUIRED)
 
 # Use pkg-config to find LibGit2
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGIT2 REQUIRED libgit2)
+
+# Add CLI11
+include(FetchContent)
+FetchContent_Declare(
+    cli11
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11
+    GIT_TAG v2.3.2
+)
+FetchContent_MakeAvailable(cli11)
 
 # Add source files
 set(SOURCES
@@ -66,6 +77,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Threads::Threads
     ${LIBGIT2_LIBRARIES}
+    CLI11::CLI11
 )
 
 if(NOT WIN32)

@@ -4,7 +4,6 @@
 #include <thread>
 #include <atomic>
 #include <memory>
-#include <CLI/CLI.hpp>
 #include "file_utils.hpp"
 #include "thread_safe_queue.hpp"
 #include "statistics_module.hpp"
@@ -32,42 +31,25 @@ void process_files(std::vector<std::unique_ptr<StatisticsModule>>& modules) {
 }
 
 int main(int argc, char* argv[]) {
-    CLI::App app{"CodeFetch - A code statistics tool"};
-    app.set_version_flag("-v,--version", std::string(PROJECT_VERSION));
-
-    std::string dir_path;
-    app.add_option("directory", dir_path, "Directory to analyze")->required();
-
-    bool show_languages = false;
-    app.add_flag("-l,--languages", show_languages, "Show only language statistics");
-
-    bool show_license = false;
-    app.add_flag("-i,--license", show_license, "Show only license information");
-
-    CLI11_PARSE(app, argc, argv);
-
-    if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
-        std::cerr << "Error: Invalid directory path." << std::endl;
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <directory_path>" << std::endl;
         return 1;
     }
 
     setup_signal_handler();
 
-    std::vector<std::unique_ptr<StatisticsModule>> modules;
-    if (!show_languages && !show_license) {
-        modules.push_back(std::make_unique<LineCounterModule>());
-        modules.push_back(std::make_unique<LanguageStatsModule>());
-        modules.push_back(std::make_unique<MetabuildSystemModule>());
-        modules.push_back(std::make_unique<LicenseModule>());
-        modules.push_back(std::make_unique<GitModule>());
-    } else {
-        if (show_languages) {
-            modules.push_back(std::make_unique<LanguageStatsModule>());
-        }
-        if (show_license) {
-            modules.push_back(std::make_unique<LicenseModule>());
-        }
+    fs::path dir_path(argv[1]);
+    if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
+        std::cerr << "Error: Invalid directory path." << std::endl;
+        return 1;
     }
+
+    std::vector<std::unique_ptr<StatisticsModule>> modules;
+    modules.push_back(std::make_unique<LineCounterModule>());
+    modules.push_back(std::make_unique<LanguageStatsModule>());
+    modules.push_back(std::make_unique<MetabuildSystemModule>());
+    modules.push_back(std::make_unique<LicenseModule>());
+    modules.push_back(std::make_unique<GitModule>());
 
     for (const auto& entry : fs::recursive_directory_iterator(dir_path)) {
         if (fs::is_regular_file(entry) && FileUtils::is_source_file(entry.path())) {
