@@ -6,7 +6,7 @@ add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 find_program(CLANGXX_COMPILER clang++)
 
 if(CLANGXX_COMPILER)
-		# set(CMAKE_CXX_COMPILER ${CLANGXX_COMPILER})
+		set(CMAKE_CXX_COMPILER ${CLANGXX_COMPILER})
     set(COMPILER_INFO "Using Clang++ compiler: ${CLANGXX_COMPILER}")
 else()
     set(COMPILER_INFO "Clang++ not found, using default system compiler")
@@ -26,10 +26,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Set optimization flags for maximum performance
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -ffast-math -DNDEBUG")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -ffast-math -DNDEBUG")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 
 # Additional performance optimizations
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -flto")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -flto")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
 
 # Enable Link Time Optimization (LTO)
 include(CheckIPOSupported)
