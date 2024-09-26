@@ -1,18 +1,29 @@
 cmake_minimum_required(VERSION 3.12)
-project(codefetch VERSION 0.9.7)
+project(codefetch VERSION 0.9.7 LANGUAGES NONE)
 add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 
-# Remove forced Ninja generator
-# set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
+# Check if Clang++ is available
+find_program(CLANGXX_COMPILER clang++)
+
+if(CLANGXX_COMPILER)
+		# set(CMAKE_CXX_COMPILER ${CLANGXX_COMPILER})
+    set(COMPILER_INFO "Using Clang++ compiler: ${CLANGXX_COMPILER}")
+else()
+    set(COMPILER_INFO "Clang++ not found, using default system compiler")
+endif()
+
+message("\n======== Custom Build Information =========")
+message(STATUS "${COMPILER_INFO}")
+message(STATUS "Using CMake generator: ${CMAKE_GENERATOR}")
+message("===========================================\n")
+
+# Enable C++ support
+enable_language(CXX)
 
 # Set C++ standard
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Set Clang as the compiler (commented out for now)
-# set(CMAKE_C_COMPILER clang)
-# set(CMAKE_CXX_COMPILER clang++)
 
 # Set optimization flags for maximum performance
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -ffast-math -DNDEBUG")
@@ -28,7 +39,6 @@ if(supported)
 else()
     message(WARNING "IPO is not supported: ${error}")
 endif()
-
 
 # Find required packages
 find_package(Threads REQUIRED)
@@ -89,6 +99,15 @@ endif()
 target_compile_options(${PROJECT_NAME} PRIVATE
     -Wall -Wextra -Wpedantic
 )
+
+# Add a custom target to print compiler information during build
+add_custom_target(print_compiler_info
+    COMMAND ${CMAKE_COMMAND} -E echo "Compiling with: $<$<BOOL:${CMAKE_CXX_COMPILER}>:${CMAKE_CXX_COMPILER}>$<$<NOT:$<BOOL:${CMAKE_CXX_COMPILER}>>:default compiler>"
+    COMMENT "Compiler information:"
+)
+
+# Make sure the custom target runs before the main build
+add_dependencies(${PROJECT_NAME} print_compiler_info)
 
 # Installation
 include(GNUInstallDirs)
