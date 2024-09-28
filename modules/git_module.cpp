@@ -1,6 +1,3 @@
-#include "git_module.hpp"
-#include <iostream>
-#include <algorithm>
 #include <iomanip>
 #include <ctime>
 #include <sstream>
@@ -8,7 +5,10 @@
 #include <numeric>
 #include <chrono>
 #include <atomic>
-#include <signal.h>
+#include <iostream>
+#include <algorithm>
+
+#include "git_module.hpp"
 #include "../src/output_formatter.hpp"
 
 std::atomic<bool> GitModule::interrupt_requested(false);

@@ -9,7 +9,6 @@
 
 #include "file_utils.hpp"
 #include "license_module.hpp"
-#include "signal_handler.hpp"
 #include "statistics_module.hpp"
 #include "thread_safe_queue.hpp"
 #include "modules/git_module.hpp"
@@ -65,10 +64,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-		// 3 STEP. SETUG SIGNALS FOR PROGRAM
-    setup_signal_handler();
-
-		// 4 STEP. CREATE ARRAY OF MODULES
+		// 3 STEP. CREATE ARRAY OF MODULES
     std::vector<std::unique_ptr<StatisticsModule>> modules;
     if (!show_languages && !show_license && !show_metabuild_system
 									 	&& !show_git && !show_line_counter) {
@@ -95,7 +91,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-		// STEP 5. FILE COLLECTION AND QUEUEING 
+		// STEP 4. FILE COLLECTION AND QUEUEING 
     for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {
         if (fs::is_regular_file(entry) && FileUtils::is_source_file(entry.path())) {
             file_queue.push(entry.path());
@@ -110,7 +106,7 @@ int main(int argc, char *argv[]) {
 
     file_queue.finish();
 
-		// STEP 6. THREAD CREATION AND LAUNCH
+		// STEP 5. THREAD CREATION AND LAUNCH
     unsigned int num_threads = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
     for (unsigned int i = 0; i < num_threads; ++i) {
@@ -129,7 +125,7 @@ int main(int argc, char *argv[]) {
         thread.join();
     }
 
-		// STEP 7. DISPLAYING RESULTS
+		// STEP 6. DISPLAYING RESULTS
     for (const auto &module : modules) {
         module->print_stats();
     }
