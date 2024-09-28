@@ -113,14 +113,6 @@ int main(int argc, char *argv[]) {
         threads.emplace_back(process_files, std::ref(modules));
     }
 
-    while (files_processed < total_files) {
-        /*std::cout << "\rProcessing files: " << files_processed << " / " << total_files << " ("
-                  << (files_processed * 100 / total_files) << "%)" << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));*/
-    }
-    /*std::cout << "\rProcessing files: " << total_files << " / " << total_files << " (100%)"
-              << std::endl;*/
-
     for (auto &thread : threads) {
         thread.join();
     }
