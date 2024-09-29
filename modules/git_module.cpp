@@ -73,9 +73,9 @@ void GitModule::process_commits() {
 
     git_oid oid;
     size_t processed_commits = 0;
-    const size_t max_commits = 200000; // Увеличено до 200,000 коммитов
+    const size_t max_commits = 200000;
     const auto start_time = std::chrono::steady_clock::now();
-    const auto max_duration = std::chrono::minutes(10); // Увеличено до 10 минут
+    const auto max_duration = std::chrono::minutes(10);
 
     while (git_revwalk_next(&oid, walker) == 0 && processed_commits < max_commits && !interrupt_requested.load()) {
         git_commit* commit;
