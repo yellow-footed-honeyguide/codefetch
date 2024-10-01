@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <regex>
 
-class LicenseModule : public StatisticsModule {
+class LicenseModule : public CodeFetchModule {
 private:
     std::string detected_license;
     std::unordered_map<std::string, std::regex> license_patterns = { 

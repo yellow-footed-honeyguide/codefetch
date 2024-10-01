@@ -1,14 +1,16 @@
 #ifndef GIT_MODULE_HPP
 #define GIT_MODULE_HPP
 
-#include "statistics_module.hpp"
-#include <git2.h>
-#include <string>
-#include <vector>
 #include <map>
 #include <atomic>
+#include <string>
+#include <vector>
 
-class GitModule : public StatisticsModule {
+#include <git2.h>
+
+#include "statistics_module.hpp"
+
+class GitModule : public CodeFetchModule {
 private:
     git_repository* repo;
     std::string first_commit_date;

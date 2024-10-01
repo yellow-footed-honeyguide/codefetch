@@ -4,7 +4,7 @@
 #include "statistics_module.hpp"
 #include "language_stats.hpp"
 
-class LanguageStatsModule : public StatisticsModule {
+class LanguageStatsModule : public CodeFetchModule {
 private:
     LanguageStats stats;
 

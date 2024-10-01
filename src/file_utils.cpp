@@ -1,7 +1,8 @@
-#include "file_utils.hpp"
 #include <functional>
 #include <algorithm>
 #include <unordered_set>
+
+#include "file_utils.hpp"
 
 namespace FileUtils {
   bool is_source_file(const fs::path& path) {

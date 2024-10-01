@@ -1,10 +1,11 @@
-#include "stats_printer.hpp"
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <locale>
 #include <vector>
+#include <sstream>
+#include <iomanip>
+#include <iostream>
 #include <algorithm>
+
+#include "stats_printer.hpp"
 
 void StatsPrinter::print_total_lines(const LineCount& total_count) {
     std::cout << "\033[1;34mTotal Lines\033[0m\n";

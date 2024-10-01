@@ -22,7 +22,7 @@ ThreadSafeQueue file_queue;
 std::atomic<size_t> files_processed{0};
 std::atomic<size_t> total_files{0};
 
-void process_files(std::vector<std::unique_ptr<StatisticsModule>> &modules) {
+void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {
     fs::path file_path;
     while (file_queue.pop(file_path)) {
         for (auto &module : modules) {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     }
 
 		// 3 STEP. CREATE ARRAY OF MODULES
-    std::vector<std::unique_ptr<StatisticsModule>> modules;
+    std::vector<std::unique_ptr<CodeFetchModule>> modules;
     if (!show_languages && !show_license && !show_metabuild_system
 									 	&& !show_git && !show_line_counter) {
         modules.push_back(std::make_unique<LineCounterModule>());

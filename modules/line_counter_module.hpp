@@ -4,7 +4,7 @@
 #include "statistics_module.hpp"
 #include "../src/line_count_util.hpp"
 
-class LineCounterModule : public StatisticsModule {
+class LineCounterModule : public CodeFetchModule {
 private:
     LineCounter counter;
 

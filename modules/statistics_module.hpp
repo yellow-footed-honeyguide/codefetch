@@ -1,16 +1,16 @@
-#ifndef STATISTICS_MODULE_HPP
-#define STATISTICS_MODULE_HPP
+#ifndef CODEFETCH_MODULE_HPP
+#define CODEFETCH_MODULE_HPP
 
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
-class StatisticsModule {
+class CodeFetchModule {
 public:
-    virtual ~StatisticsModule() = default;
+    virtual ~CodeFetchModule() = default;
     virtual void process_file(const fs::path& file_path) = 0;
     virtual void print_stats() const = 0;
 };
 
-#endif // STATISTICS_MODULE_HPP
+#endif // CODEFETCH_MODULE_HPP
 

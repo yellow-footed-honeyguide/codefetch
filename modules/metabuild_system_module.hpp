@@ -7,7 +7,7 @@
 #include <regex>
 #include <unordered_map>
 
-class MetabuildSystemModule : public StatisticsModule {
+class MetabuildSystemModule : public CodeFetchModule {
 private:
     std::unordered_set<std::string> detected_systems;
     std::unordered_map<std::string, std::regex> build_system_patterns = {
