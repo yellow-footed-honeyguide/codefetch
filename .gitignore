@@ -16,6 +16,7 @@
 # Build directories
 build/
 build-dir/
+builddir/
 Debug/
 Release/
 x64/
