@@ -2,23 +2,22 @@
 
 A modern, comprehensive code analysis tool for software projects.
 
-![codefetch in action](assets/codefetch.jpg)
+![codefetch in action](assets/codefetch_in_action.jpg)
 
 ## Features
-> CodeFetch provides detailed insights into your codebase,<br>
-> offering a complete analysis suite that helps developers<br>
-> understand their projects better through multiple metrics.
+> CodeFetch provides detailed insights into your codebase,offering a complete analysis suite<br> 
+> that helps developers understand their projects better through multiple metrics.
 
-- 📊 Line counting statistics (code, comments, total)
-- 🔤 Language distribution analysis
-- 📜 License detection
-- 🔨 Build system identification
-- 📈 Git repository statistics
+- Line counting statistics (code, comments, total)
+- Language distribution analysis
+- License detection
+- Build system identification
+- Git repository statistics
   - Commit history
   - Contributor analysis
   - Timeline information
-- 🧵 Multi-threaded file processing
-- 🎨 Beautiful, colorful console output
+- Multi-threaded file processing
+- Beautiful, colorful console output
 
 ## Getting Started
 
@@ -42,17 +41,17 @@ sudo make install
 
 Basic usage:
 ```bash
-codefetch <directory>           # Analyze directory with all modules
+codefetch <directory>    # Analyze directory with all modules
 ```
 
 Available options:
 ```bash
 -c, --line_counter       Show line counter statistics
--l, --languages         Show language statistics
--g, --git-statistics    Show git statistics information
--m, --metabuild_system  Show metabuild system information
--i, --license           Show license information
--v, --version          Show version information
+-l, --languages          Show language statistics
+-g, --git-statistics     Show git statistics information
+-m, --metabuild_system   Show metabuild system information
+-i, --license            Show license information
+-v, --version            Show version information
 ```
 
 
