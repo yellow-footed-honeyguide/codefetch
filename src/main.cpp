@@ -1,11 +1,11 @@
-#include <memory>
-#include <thread>
-#include <vector>
-#include <atomic>
-#include <iostream>
-#include <filesystem>
+#include <iostream>      // [C++98]
+#include <memory>        // [C++11]
+#include <thread>        // [C++11]
+#include <vector>        // [C++11]
+#include <atomic>        // [C++11]
+#include <filesystem>    // [C++17]
 
-#include <CLI/CLI.hpp>
+#include <CLI/CLI.hpp>   // [External]
 
 #include "file_utils.hpp"
 #include "license_module.hpp"
@@ -16,16 +16,16 @@
 #include "language_stats_module.hpp"
 #include "metabuild_system_module.hpp"
 
-namespace fs = std::filesystem;
+namespace fs = std::filesystem;          // [C++17] Alias for filesystem namespace for cleaner code
 
-ThreadSafeQueue file_queue;
-std::atomic<size_t> files_processed{0};
-std::atomic<size_t> total_files{0};
+ThreadSafeQueue file_queue;              // [C++11] Thread-safe queue for parallel file processing
+std::atomic<size_t> files_processed{0};  // [C++11] Atomic counter for tracking progress
+std::atomic<size_t> total_files{0};      // [C++11] Atomic counter for total file count
 
-void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {
+void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {  // [C++11] Worker function for parallel processing
     fs::path file_path;
-    while (file_queue.pop(file_path)) {
-        for (auto &module : modules) {
+    while (file_queue.pop(file_path)) {  // [C++11] Process files until queue is empty
+        for (auto &module : modules) {   // [C++11] Apply each analysis module to the file
             module->process_file(file_path);
         }
         files_processed++;
@@ -33,92 +33,74 @@ void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {
 }
 
 int main(int argc, char *argv[]) {
-    // 1 STEP. PARSE ARGUMETNS
-    CLI::App app{"CodeFetch - A code statistics tool"};
+    CLI::App app{"CodeFetch - A code statistics tool"};  // [C++17] CLI argument parser initialization
     app.set_version_flag("-v,--version", std::string(PROJECT_VERSION));
 
-    std::string dir_path;
+    std::string dir_path;            // [C++17] Command line argument configuration
     app.add_option("directory", dir_path, "Directory to analyze")->required();
 
-    bool show_line_counter = false;
+    bool show_line_counter = false;  // [C++17] Flag for line counting feature
     app.add_flag("-c,--line_counter", show_line_counter, "Show line counter statistics");
 
-    bool show_languages = false;
+    bool show_languages = false;     // [C++17] Flag for language analysis
     app.add_flag("-l,--languages", show_languages, "Show language statistics");
 
-    bool show_git = false;
+    bool show_git = false;           // [C++17] Flag for git statistics
     app.add_flag("-g,--git-statistics", show_git, "Show git statistics information");
 
-    bool show_metabuild_system = false;
-    app.add_flag("-m,--metabuild_system", show_metabuild_system,
-                 "Show metabuild system information");
+    bool show_metabuild_system = false;  // [C++17] Flag for build system detection
+    app.add_flag("-m,--metabuild_system", show_metabuild_system, "Show metabuild system information");
 
-    bool show_license = false;
+    bool show_license = false;       // [C++17] Flag for license detection
     app.add_flag("-i,--license", show_license, "Show license information");
 
-    CLI11_PARSE(app, argc, argv);
+    CLI11_PARSE(app, argc, argv);    // [C++17] Parse command line arguments
 
-		// 2 STEP. CHECK THE DIRECTORY IS VALID
-    if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
+    if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {  // [C++17] Validate input directory
         std::cerr << "Error: Invalid directory path." << std::endl;
         return 1;
     }
 
-		// 3 STEP. CREATE ARRAY OF MODULES
-    std::vector<std::unique_ptr<CodeFetchModule>> modules;
-    if (!show_languages && !show_license && !show_metabuild_system
-									 	&& !show_git && !show_line_counter) {
-        modules.push_back(std::make_unique<LineCounterModule>());
-        modules.push_back(std::make_unique<LanguageStatsModule>());
+    std::vector<std::unique_ptr<CodeFetchModule>> modules;          // [C++11] Container for analysis modules
+    if (!show_languages && !show_license && !show_metabuild_system && !show_git && !show_line_counter) {
+        modules.push_back(std::make_unique<LineCounterModule>());   // [C++14] Create module instances using make_unique
+        modules.push_back(std::make_unique<LanguageStatsModule>()); // [C++14] Default: enable all modules
         modules.push_back(std::make_unique<GitModule>());
         modules.push_back(std::make_unique<MetabuildSystemModule>());
         modules.push_back(std::make_unique<LicenseModule>());
     } else {
-        if (show_line_counter) {
-            modules.push_back(std::make_unique<LineCounterModule>());
-        }
-        if (show_languages) {
-            modules.push_back(std::make_unique<LanguageStatsModule>());
-        }
-        if (show_metabuild_system) {
-            modules.push_back(std::make_unique<MetabuildSystemModule>());
-        }
-        if (show_license) {
-            modules.push_back(std::make_unique<LicenseModule>());
-        }
-        if (show_git) {
-            modules.push_back(std::make_unique<GitModule>());
-        }
+        if (show_line_counter) modules.push_back(std::make_unique<LineCounterModule>()); // [C++14] Enable selected modules
+        if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>());
+        if (show_metabuild_system) modules.push_back(std::make_unique<MetabuildSystemModule>());
+        if (show_license) modules.push_back(std::make_unique<LicenseModule>());
+        if (show_git) modules.push_back(std::make_unique<GitModule>());
     }
 
-		// STEP 4. FILE COLLECTION AND QUEUEING 
-    for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {
-        if (fs::is_regular_file(entry) && FileUtils::is_source_file(entry.path())) {
+    for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {  // [C++17] Collect files recursively
+        if (fs::is_regular_file(entry) && FileUtils::is_source_file(entry.path())) {  // [C++17] Filter source files
             file_queue.push(entry.path());
             total_files++;
         }
     }
 
-    if (total_files == 0) {
+    if (total_files == 0) {  // Validate file collection results
         std::cerr << "Error: No source files found in the specified directory." << std::endl;
         return 1;
     }
 
-    file_queue.finish();
+    file_queue.finish();  // [C++11] Signal end of file queueing
 
-		// STEP 5. THREAD CREATION AND LAUNCH
-    unsigned int num_threads = std::thread::hardware_concurrency();
+    unsigned int num_threads = std::thread::hardware_concurrency();  // [C++11] Get optimal thread count
     std::vector<std::thread> threads;
-    for (unsigned int i = 0; i < num_threads; ++i) {
+    for (unsigned int i = 0; i < num_threads; ++i) {  // [C++11] Create worker threads
         threads.emplace_back(process_files, std::ref(modules));
     }
 
-    for (auto &thread : threads) {
+    for (auto &thread : threads) {        // [C++11] Wait for all threads to complete
         thread.join();
     }
 
-		// STEP 6. DISPLAYING RESULTS
-    for (const auto &module : modules) {
+    for (const auto &module : modules) {  // [C++11] Print results from all modules
         module->print_stats();
     }
 

@@ -1,38 +1,43 @@
-#include "language_stats.hpp"
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
-#include <vector>
+#include <iostream>    // [C++98]
+#include <iomanip>     // [C++98]
+#include <algorithm>   // [C++98]
+#include <vector>      // [C++98]
 
-void LanguageStats::add_file(const fs::path& file_path, size_t lines) {
-    std::string language = detect_language(file_path);
-    language_lines[language] += lines;
-    total_lines += lines;
+#include "language_stats.hpp"
+
+void LanguageStats::add_file(const fs::path& file_path, size_t lines) { // [C++17] Add file with line count to stats
+    std::string language = detect_language(file_path);                  // Get language from file extension
+    language_lines[language] += lines;                                  // [C++11] Update language line count
+    total_lines += lines;                                               // Update total lines
 }
 
-void LanguageStats::print_stats() const {
+void LanguageStats::print_stats() const {                               // [C++11] Print language distribution
     std::cout << "\nLanguages:\n";
 
-    std::vector<std::pair<std::string, size_t>> sorted_stats = get_sorted_stats();
+    std::vector<std::pair<std::string, size_t>> sorted_stats = get_sorted_stats(); // [C++11] Get sorted statistics
 
-    for (const auto& [language, lines] : sorted_stats) {
-        double percentage = (static_cast<double>(lines) / total_lines) * 100.0;
-        if (percentage >= 1.0) {
+    for (const auto& [language, lines] : sorted_stats) {                 // [C++17] Structured binding for stat pairs
+        double percentage = (static_cast<double>(lines) / total_lines) * 100.0;  // Calculate percentage
+        if (percentage >= 1.0) {                                         // Only show languages with ≥1% share
+            // [C++11] Format output with aligned columns
             std::cout << std::setw(20) << std::left << language
                       << std::setw(10) << std::right << std::fixed << std::setprecision(1) << percentage << "%\n";
         }
     }
 }
 
+// [C++11] Get sorted statistics for languages
 std::vector<std::pair<std::string, size_t>> LanguageStats::get_sorted_stats() const {
-    std::vector<std::pair<std::string, size_t>> sorted_stats(language_lines.begin(), language_lines.end());
+    // [C++11] Copy to vector
+    std::vector<std::pair<std::string, size_t>> sorted_stats(language_lines.begin(), language_lines.end());  
+    // [C++11] Sort by line count using lambda
     std::sort(sorted_stats.begin(), sorted_stats.end(),
               [](const auto& a, const auto& b) { return a.second > b.second; });
     return sorted_stats;
 }
 
-std::string LanguageStats::detect_language(const fs::path& file_path) const {
-    static const std::unordered_map<std::string, std::string> extension_to_language = {
+std::string LanguageStats::detect_language(const fs::path& file_path) const { // [C++17] Detect language from file extension
+    static const std::unordered_map<std::string, std::string> extension_to_language = { // [C++11] Static extension mapping
         {".c", "C"}, {".cpp", "C++"}, {".cxx", "C++"}, {".cc", "C++"}, {".h", "C/C++ Header"},
         {".hpp", "C++ Header"}, {".hxx", "C++ Header"}, {".py", "Python"}, {".java", "Java"},
         {".js", "JavaScript"}, {".ts", "TypeScript"}, {".vim", "Vim script"}, {".pl", "Perl"},
@@ -45,11 +50,11 @@ std::string LanguageStats::detect_language(const fs::path& file_path) const {
         {".jl", "Julia"}, {".m", "MATLAB"}, {".R", "R"}, {".sql", "SQL"}
     };
 
-    std::string ext = file_path.extension().string();
-    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    std::string ext = file_path.extension().string();               // [C++17] Get file extension
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower); // [C++11] Convert to lowercase
 
-    auto it = extension_to_language.find(ext);
-    if (it != extension_to_language.end()) {
+    auto it = extension_to_language.find(ext);                      // [C++11] Look up language
+    if (it != extension_to_language.end()) {                        // Return mapped language or "Other"
         return it->second;
     }
     return "Other";
