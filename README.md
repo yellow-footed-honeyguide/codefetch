@@ -22,10 +22,7 @@ A modern, comprehensive code analysis tool for software projects.
 ## Getting Started
 
 ### Dependencies
-- C++17 or higher
-- CMake 3.10+
 - libgit2 for Git statistics
-- CLI11 for command line parsing
 
 ### Build & Install from source
 ```bash

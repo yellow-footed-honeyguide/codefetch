@@ -5,9 +5,8 @@
 #include <atomic>        // [C++11]
 #include <filesystem>    // [C++17]
 
-//#include <CLI/CLI.hpp>   // [External]
-
 #include "file_utils.hpp"
+#include "args_parser.hpp"
 #include "license_module.hpp"
 #include "statistics_module.hpp"
 #include "thread_safe_queue.hpp"
@@ -15,7 +14,6 @@
 #include "line_counter_module.hpp"
 #include "language_stats_module.hpp"
 #include "metabuild_system_module.hpp"
-#include "args_parser.hpp"
 
 
 namespace fs = std::filesystem;          // [C++17] Alias for filesystem namespace for cleaner code
