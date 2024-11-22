@@ -50,13 +50,13 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGIT2 REQUIRED libgit2)
 
 # Add CLI11
-include(FetchContent)
-FetchContent_Declare(
-    cli11
-    GIT_REPOSITORY https://github.com/CLIUtils/CLI11
-    GIT_TAG v2.4.2
-)
-FetchContent_MakeAvailable(cli11)
+#include(FetchContent)
+#FetchContent_Declare(
+#    cli11
+#    GIT_REPOSITORY https://github.com/CLIUtils/CLI11
+#    GIT_TAG v2.4.2
+#)
+#FetchContent_MakeAvailable(cli11)
 
 # Add source files
 set(SOURCES
@@ -89,7 +89,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Threads::Threads
     ${LIBGIT2_LIBRARIES}
-    CLI11::CLI11
+    #CLI11::CLI11
 )
 
 if(NOT WIN32)
