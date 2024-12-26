@@ -1,6 +1,6 @@
 # Compiler and flags
 cxx = clang++
-cxxflags = -std=c++20 -fmodules -fprebuilt-module-path=build/pcm
+cxxflags = -Wno-everything -std=c++23 -fmodules -fprebuilt-module-path=build/pcm
 ldflags = -lgit2
 
 # Rules for compiling modules
