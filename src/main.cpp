@@ -15,8 +15,6 @@ import Statistics_module;
 #include <atomic>     
 #include <filesystem>
 
-//namespace fs = std::filesystem;         // Alias for filesystem namespace 
-
 ThreadSafeQueue file_queue;             // Thread-safe queue for parallel file processing
 std::atomic<size_t> files_processed{0}; // Atomic counter for tracking progress
 std::atomic<size_t> total_files{0};     // Atomic counter for total file count
@@ -33,8 +31,7 @@ void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {
 }
 
 int main(int argc, char *argv[]) {
-    //ArgsParser parser("CodeFetch", PROJECT_VERSION); // Initialize parser
-    ArgsParser parser("CodeFetch", "0.9.7"); // Initialize parser
+    ArgsParser parser("CodeFetch", "PROJECT_VERSION"); // Initialize parser
     std::string dir_path; // Directory path storage
 
     // CLI options
