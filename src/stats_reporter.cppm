@@ -6,9 +6,9 @@ module;
 #include <iostream>     
 #include <algorithm>
 #include <filesystem>     
-export module Stats_printer;
-import Language_stats;
-import Line_count_util;
+export module stats_reporter;
+import language_info;
+import lines_count;
 
 export class StatsPrinter {
 public:

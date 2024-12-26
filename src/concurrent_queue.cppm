@@ -4,7 +4,7 @@ module;
 #include <condition_variable> 
 #include <chrono>             
 #include <filesystem>        
-export module Thread_safe_queue;
+export module concurrent_queue;
 
 export class ThreadSafeQueue {
 private:

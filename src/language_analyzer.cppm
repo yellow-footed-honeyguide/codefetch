@@ -1,12 +1,12 @@
 module;
 #include <filesystem>     
 #include <vector>     
-export module Language_stats_module;
-import Language_stats;
-import Stats_printer;
-import Line_count_util;
-import Output_formatter;
-import Statistics_module;
+export module language_analyzer;
+import language_info;
+import stats_reporter;
+import lines_count;
+import console_formatter;
+import analyzer_base;
 
 
 export class LanguageStatsModule : public CodeFetchModule { //Derive from base module

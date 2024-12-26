@@ -7,7 +7,7 @@ module;
 #include <iomanip>     
 #include <algorithm>   
 #include <vector>      
-export module Language_stats;
+export module language_info;
 
 namespace fs = std::filesystem; 
 

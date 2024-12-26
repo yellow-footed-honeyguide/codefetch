@@ -6,9 +6,9 @@ module;
 #include <unordered_map>      
 #include <unordered_set> 
 #include <filesystem>     
-export module Metabuild_system_module;
-import Output_formatter;
-import Statistics_module;
+export module metabuild_sys_analyzer;
+import console_formatter;
+import analyzer_base;
 
   
 export class MetabuildSystemModule : public CodeFetchModule {

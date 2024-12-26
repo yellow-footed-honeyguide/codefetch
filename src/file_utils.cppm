@@ -4,10 +4,8 @@ module;
 #include <functional>     
 #include <algorithm>      
 #include <unordered_set> 
-export module File_utils;
-import Thread_safe_queue;
-
-//namespace fs = std::filesystem; // Namespace alias for filesystem
+export module file_utils;
+import concurrent_queue;
 
 export namespace FileUtils {
     bool is_source_file(const std::filesystem::path& path); // Check if file is a supported source file

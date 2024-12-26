@@ -5,7 +5,7 @@ module;
 #include <iomanip>     
 #include <sstream>      
 #include <algorithm>    
-export module Output_formatter;
+export module console_formatter;
 
 
 export class OutputFormatter {

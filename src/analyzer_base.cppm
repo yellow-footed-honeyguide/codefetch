@@ -1,8 +1,6 @@
 module;  
 #include <filesystem> 
-export module Statistics_module;
-
-//export namespace fs = std::filesystem; 
+export module analyzer_base;
 
 export class CodeFetchModule { // Abstract base class for statistics modules
 public:

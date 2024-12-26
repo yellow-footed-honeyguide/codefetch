@@ -1,6 +1,11 @@
 # Compiler and flags
 cxx = clang++
-cxxflags = -DPROJECT_VERSION="0.9.7" -Wno-everything -std=c++23 -fmodules -fprebuilt-module-path=build/pcm
+cxxflags =  $
+  -DPROJECT_VERSION="0.9.7" $
+  -Wno-everything $
+  -std=c++23 $
+  -fmodules $
+  -fprebuilt-module-path=build/pcm
 ldflags = -lgit2
 
 # Rules for compiling modules
@@ -30,44 +35,67 @@ build build: mkdir
 build build/pcm: mkdir
 
 # Building base modules (Level 1)
-build build/pcm/Thread_safe_queue.pcm: compile_pcm src/Thread_safe_queue.cppm | build/pcm
-build build/pcm/Output_formatter.pcm: compile_pcm src/Output_formatter.cppm | build/pcm
-build build/pcm/Line_count_util.pcm: compile_pcm src/Line_count_util.cppm | build/pcm
-build build/pcm/Args_parser.pcm: compile_pcm src/Args_parser.cppm | build/pcm
+build build/pcm/concurrent_queue.pcm: compile_pcm src/concurrent_queue.cppm | build/pcm
+build build/pcm/console_formatter.pcm: compile_pcm src/console_formatter.cppm | build/pcm
+build build/pcm/lines_count.pcm: compile_pcm src/lines_count.cppm | build/pcm
+build build/pcm/args_parser.pcm: compile_pcm src/args_parser.cppm | build/pcm
 
-build build/Thread_safe_queue.o: compile_object build/pcm/Thread_safe_queue.pcm
-build build/Output_formatter.o: compile_object build/pcm/Output_formatter.pcm
-build build/Line_count_util.o: compile_object build/pcm/Line_count_util.pcm
-build build/Args_parser.o: compile_object build/pcm/Args_parser.pcm
+build build/concurrent_queue.o: compile_object build/pcm/concurrent_queue.pcm
+build build/console_formatter.o: compile_object build/pcm/console_formatter.pcm
+build build/lines_count.o: compile_object build/pcm/lines_count.pcm
+build build/args_parser.o: compile_object build/pcm/args_parser.pcm
 
 # Building modules with basic dependencies (Level 2)
-build build/pcm/File_utils.pcm: compile_pcm src/File_utils.cppm | build/pcm/Thread_safe_queue.pcm
-build build/pcm/Statistics_module.pcm: compile_pcm src/Statistics_module.cppm
-build build/pcm/Language_stats.pcm: compile_pcm src/Language_stats.cppm
-build build/pcm/Stats_printer.pcm: compile_pcm src/Stats_printer.cppm | build/pcm/Language_stats.pcm build/pcm/Line_count_util.pcm
+build build/pcm/file_utils.pcm: compile_pcm src/file_utils.cppm | $
+                                            build/pcm/concurrent_queue.pcm
+build build/pcm/analyzer_base.pcm: compile_pcm src/analyzer_base.cppm
+build build/pcm/language_info.pcm: compile_pcm src/language_info.cppm
+build build/pcm/stats_reporter.pcm: compile_pcm src/stats_reporter.cppm | $
+                                               build/pcm/language_info.pcm $
+                                               build/pcm/lines_count.pcm
 
-build build/File_utils.o: compile_object build/pcm/File_utils.pcm
-build build/Statistics_module.o: compile_object build/pcm/Statistics_module.pcm
-build build/Language_stats.o: compile_object build/pcm/Language_stats.pcm
-build build/Stats_printer.o: compile_object build/pcm/Stats_printer.pcm
+build build/file_utils.o: compile_object build/pcm/file_utils.pcm
+build build/analyzer_base.o: compile_object build/pcm/analyzer_base.pcm
+build build/language_info.o: compile_object build/pcm/language_info.pcm
+build build/stats_reporter.o: compile_object build/pcm/stats_reporter.pcm
 
 # Building dependent modules (Level 3)
-build build/pcm/Git_module.pcm: compile_pcm src/Git_module.cppm | build/pcm/Output_formatter.pcm build/pcm/Statistics_module.pcm
-build build/pcm/Language_stats_module.pcm: compile_pcm src/Language_stats_module.cppm | build/pcm/Language_stats.pcm build/pcm/Stats_printer.pcm
-build build/pcm/License_module.pcm: compile_pcm src/License_module.cppm | build/pcm/Output_formatter.pcm build/pcm/Statistics_module.pcm
-build build/pcm/Line_counter_module.pcm: compile_pcm src/Line_counter_module.cppm | build/pcm/Stats_printer.pcm build/pcm/Line_count_util.pcm
-build build/pcm/Metabuild_system_module.pcm: compile_pcm src/Metabuild_system_module.cppm | build/pcm/Output_formatter.pcm build/pcm/Statistics_module.pcm
+build build/pcm/git_analyzer.pcm: compile_pcm src/git_analyzer.cppm | $
+                                            build/pcm/console_formatter.pcm $
+                                            build/pcm/analyzer_base.pcm
+build build/pcm/language_analyzer.pcm: compile_pcm src/language_analyzer.cppm | $
+                                                       build/pcm/language_info.pcm $
+                                                       build/pcm/stats_reporter.pcm
+build build/pcm/license_analyzer.pcm: compile_pcm src/license_analyzer.cppm | $
+                                                build/pcm/console_formatter.pcm $
+                                                build/pcm/analyzer_base.pcm
+build build/pcm/lines_analyzer.pcm: compile_pcm src/lines_analyzer.cppm | $
+                                                     build/pcm/stats_reporter.pcm $
+                                                     build/pcm/lines_count.pcm
+build build/pcm/metabuild_sys_analyzer.pcm: compile_pcm src/metabuild_sys_analyzer.cppm | $
+                                                     build/pcm/console_formatter.pcm $
+                                                     build/pcm/analyzer_base.pcm
 
-build build/Git_module.o: compile_object build/pcm/Git_module.pcm
-build build/Language_stats_module.o: compile_object build/pcm/Language_stats_module.pcm
-build build/License_module.o: compile_object build/pcm/License_module.pcm
-build build/Line_counter_module.o: compile_object build/pcm/Line_counter_module.pcm
-build build/Metabuild_system_module.o: compile_object build/pcm/Metabuild_system_module.pcm
+build build/git_analyzer.o: compile_object build/pcm/git_analyzer.pcm
+build build/language_analyzer.o: compile_object build/pcm/language_analyzer.pcm
+build build/license_analyzer.o: compile_object build/pcm/license_analyzer.pcm
+build build/lines_analyzer.o: compile_object build/pcm/lines_analyzer.pcm
+build build/metabuild_sys_analyzer.o: compile_object build/pcm/metabuild_sys_analyzer.pcm
 
 # Compiling main.cpp and linking
-build build/main.o: compile_cpp src/main.cpp | build/pcm/License_module.pcm build/pcm/Metabuild_system_module.pcm build/pcm/Git_module.pcm build/pcm/Line_counter_module.pcm build/pcm/Language_stats_module.pcm
+build build/main.o: compile_cpp src/main.cpp | build/pcm/license_analyzer.pcm $
+                                               build/pcm/metabuild_sys_analyzer.pcm $
+                                               build/pcm/git_analyzer.pcm $
+                                               build/pcm/lines_analyzer.pcm $
+                                               build/pcm/language_analyzer.pcm
 
-build codefetch: link build/main.o build/Thread_safe_queue.o build/Output_formatter.o build/Line_count_util.o build/Args_parser.o build/File_utils.o build/Statistics_module.o build/Language_stats.o build/Stats_printer.o build/Git_module.o build/Language_stats_module.o build/License_module.o build/Line_counter_module.o build/Metabuild_system_module.o
+build codefetch: link build/main.o build/concurrent_queue.o $
+                      build/console_formatter.o build/lines_count.o $
+                      build/args_parser.o build/file_utils.o $
+                      build/analyzer_base.o build/language_info.o $
+                      build/stats_reporter.o build/git_analyzer.o $
+                      build/language_analyzer.o build/license_analyzer.o $
+                      build/lines_analyzer.o build/metabuild_sys_analyzer.o
 
 # Default Targets
 default codefetch

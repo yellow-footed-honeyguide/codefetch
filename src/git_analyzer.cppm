@@ -14,9 +14,9 @@ module;
 #include <algorithm>
 #include <filesystem>        
 #include <git2.h>
-export module Git_module;
-import Output_formatter;
-import Statistics_module;
+export module git_analyzer;
+import console_formatter;
+import analyzer_base;
 
 
 export class GitModule : public CodeFetchModule {

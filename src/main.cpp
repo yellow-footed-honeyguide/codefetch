@@ -1,12 +1,13 @@
-import License_module;
-import Metabuild_system_module;
-import Git_module;
-import Line_counter_module;
-import Language_stats_module;
-import File_utils;
-import Args_parser;
-import Thread_safe_queue;
-import Statistics_module;
+import file_utils;
+import args_parser;
+import analyzer_base;
+import concurrent_queue;
+
+import git_analyzer;
+import lines_analyzer;
+import license_analyzer;
+import language_analyzer;
+import metabuild_sys_analyzer;
 
 #include <iostream>   
 #include <memory>     
@@ -15,15 +16,15 @@ import Statistics_module;
 #include <atomic>     
 #include <filesystem>
 
-ThreadSafeQueue file_queue;             // Thread-safe queue for parallel file processing
+ThreadSafeQueue file_queue; // Thread-safe queue for parallel file processing
 std::atomic<size_t> files_processed{0}; // Atomic counter for tracking progress
-std::atomic<size_t> total_files{0};     // Atomic counter for total file count
+std::atomic<size_t> total_files{0}; // Atomic counter for total file count
 
 // Worker function for parallel processing
 void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {  
     std::filesystem::path file_path;
-    while (file_queue.pop(file_path)) {      // Process files until queue is empty
-        for (auto &module : modules) {       // Apply each analysis module to the file
+    while (file_queue.pop(file_path)) { // Process files until queue is empty
+        for (auto &module : modules) { // Apply each analysis module to the file
             module->process_file(file_path);
         }
         files_processed++;
@@ -58,7 +59,7 @@ int main(int argc, char *argv[]) {
     parser.add_flag("i", &show_license);
 
     try {
-        parser.parse(argc, argv);          // Parse arguments
+        parser.parse(argc, argv); // Parse arguments
         dir_path = parser.get_directory(); // Get directory path
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -71,25 +72,27 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::vector<std::unique_ptr<CodeFetchModule>> modules;         // Container for analysis modules
+    std::vector<std::unique_ptr<CodeFetchModule>> modules; // Container for analysis modules
     if (!show_languages && !show_license && !show_metabuild_system && !show_git && !show_line_counter) {
-        modules.push_back(std::make_unique<LineCounterModule>());  // Create module instances using make_unique 
-        modules.push_back(std::make_unique<LanguageStatsModule>());// Default: enable all modules
+        modules.push_back(std::make_unique<LineCounterModule>()); // Create module instances using make_unique 
+        modules.push_back(std::make_unique<LanguageStatsModule>()); // Default: enable all modules
         modules.push_back(std::make_unique<GitModule>());
         modules.push_back(std::make_unique<MetabuildSystemModule>());
         modules.push_back(std::make_unique<LicenseModule>());
-    } else {
-        if (show_line_counter) modules.push_back(std::make_unique<LineCounterModule>()); // [C++14] Enable selected modules
+    } else { // Enable selected modules
+        if (show_line_counter) modules.push_back(std::make_unique<LineCounterModule>()); 
         if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>());
         if (show_metabuild_system) modules.push_back(std::make_unique<MetabuildSystemModule>());
         if (show_license) modules.push_back(std::make_unique<LicenseModule>());
         if (show_git) modules.push_back(std::make_unique<GitModule>());
     }
-
-    for (const auto &entry : std::filesystem::recursive_directory_iterator(dir_path)) {  // [C++17] Collect files recursively
-        if (std::filesystem::is_regular_file(entry) && FileUtils::is_source_file(entry.path())) {  // [C++17] Filter source files
-            file_queue.push(entry.path());
-            total_files++;
+    
+    // Collect files recursively
+    for (const auto &entry : std::filesystem::recursive_directory_iterator(dir_path)) {  
+        if (std::filesystem::is_regular_file(entry) && // Filter source files
+            FileUtils::is_source_file(entry.path())) {  
+                file_queue.push(entry.path());
+                total_files++;
         }
     }
 
@@ -98,11 +101,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    file_queue.finish(); //  Signal end of file queueing
+    file_queue.finish(); // Signal end of file queueing
 
     unsigned int num_threads = std::thread::hardware_concurrency(); // Get optimal thread count
     std::vector<std::thread> threads;
-    for (unsigned int i = 0; i < num_threads; ++i) {  // Create worker threads
+    for (unsigned int i = 0; i < num_threads; ++i) { // Create worker threads
         threads.emplace_back(process_files, std::ref(modules));
     }
 

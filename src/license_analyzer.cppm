@@ -6,9 +6,9 @@ module;
 #include <iostream> 
 #include <unordered_map> 
 #include <filesystem>        
-export module License_module;
-import Output_formatter;
-import Statistics_module;
+export module license_analyzer;
+import console_formatter;
+import analyzer_base;
 
 export class LicenseModule : public CodeFetchModule {
 private:

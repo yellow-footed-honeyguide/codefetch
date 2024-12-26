@@ -1,11 +1,11 @@
 module;
 #include <filesystem> 
 #include <vector>       
-export module Line_counter_module;
-import Stats_printer; 
-import Line_count_util;
-import Output_formatter;
-import Statistics_module;
+export module lines_analyzer;
+import stats_reporter; 
+import lines_count;
+import console_formatter;
+import analyzer_base;
 
 export class LineCounterModule : public CodeFetchModule { // Module for counting code lines
 private:

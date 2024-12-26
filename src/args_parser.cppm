@@ -4,7 +4,7 @@ module;
 #include <map>            
 #include <stdexcept>
 #include <iostream>   
-export module Args_parser;
+export module args_parser;
 
 export class ArgsParser {
 private:

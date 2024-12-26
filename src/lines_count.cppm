@@ -4,7 +4,7 @@ module;
 #include <fstream>      
 #include <string>       
 #include <algorithm> 
-export module Line_count_util;
+export module lines_count;
 
 
 //namespace fs = std::filesystem;      
