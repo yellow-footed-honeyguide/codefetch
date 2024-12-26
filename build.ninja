@@ -1,7 +1,7 @@
 # Compiler and flags
 cxx = clang++
 cxxflags =  $
-  -DPROJECT_VERSION="0.9.7" $
+  -DPROJECT_VERSION=\"0.9.7\" $
   -Wno-everything $
   -std=c++23 $
   -fmodules $
@@ -102,5 +102,16 @@ default codefetch
 
 rule clean
   command = rm -rf codefetch ./build
- 
 build clean: clean
+
+
+rule install_bin
+    command = install -m 755 codefetch /usr/local/bin/codefetch
+    description = Installing codefetch
+
+rule uninstall_bin
+    command = rm -f /usr/local/bin/codefetch
+    description = Uninstalling codefetch
+
+build install: install_bin
+build uninstall: uninstall_bin

@@ -20,6 +20,8 @@ A modern, comprehensive code analysis tool for software projects.
 - Beautiful, colorful console output
 
 ## Getting Started
+### Requirments
+- clang compiler
 
 ### Dependencies
 - libgit2 for Git statistics
@@ -28,10 +30,11 @@ A modern, comprehensive code analysis tool for software projects.
 ```bash
 git clone https://github.com/yourusername/codefetch.git
 cd codefetch
-mkdir build && cd build
-cmake .. && make
+ninja
 # for system-wide installation (may require elevated privileges):
-sudo make install
+sudo ninja install
+# for system-wide removal (may require elevated privileges):
+sudo ninja unstall
 ```
 
 ## Usage
