@@ -36,6 +36,9 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 
+# Ninja
+.ninja_log
+
 # Dependency directories
 vcpkg_installed/
 
@@ -76,3 +79,6 @@ core
 
 # Ctags
 tags
+
+# Codefetch bin
+codefetch
