@@ -1,7 +1,8 @@
 # Compiler and flags
+project_version = 0.9.8
 cxx = clang++
 cxxflags =  $
-  -DPROJECT_VERSION=\"0.9.7\" $
+  -DPROJECT_VERSION=\"$project_version\" $
   -Wno-everything $
   -std=c++23 $
   -fmodules $
@@ -101,9 +102,8 @@ build codefetch: link build/main.o build/concurrent_queue.o $
 default codefetch
 
 rule clean
-  command = rm -rf codefetch ./build
+  command = rm -rf ./codefetch ./build
 build clean: clean
-
 
 rule install_bin
     command = install -m 755 codefetch /usr/local/bin/codefetch

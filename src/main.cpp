@@ -32,7 +32,7 @@ void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {
 }
 
 int main(int argc, char *argv[]) {
-    ArgsParser parser("CodeFetch", PROJECT_VERSION); // Initialize parser
+    ArgsParser parser("codefetch", PROJECT_VERSION); // Initialize parser
     std::string dir_path; // Directory path storage
 
     // CLI options

@@ -3,7 +3,8 @@ module;
 #include <vector>         
 #include <map>            
 #include <stdexcept>
-#include <iostream>   
+#include <iostream>
+#include <print>   
 export module args_parser;
 
 export class ArgsParser {
@@ -29,6 +30,20 @@ public:
             
             if (arg == "-v" || arg == "--version") { // Handle version flag
                 std::cout << program_name << " version " << version << std::endl;
+                std::exit(0);
+            }
+
+            if (arg == "-h" || arg == "--help") { // Handle help flag
+                std::println("Usage: {} [OPTION] [DIRECTORY]", program_name);
+                std::println("Fast tool for source code analysis.\n");
+                std::println("Options:");
+                std::println("-v, --version            Show version information");
+                std::println("-c, --line_counter       Show line counter statistics");
+                std::println("-l, --languages          Show language statistics");
+                std::println("-g, --git-statistics     Show git statistics information");
+                std::println("-m, --metabuild_system   Show metabuild system information");
+                std::println("-i, --license            Show license information");
+                std::println("-m, --metabuild_system   Show metabuild system information");
                 std::exit(0);
             }
             
