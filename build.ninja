@@ -102,7 +102,7 @@ build codefetch: link build/main.o build/concurrent_queue.o $
 default codefetch
 
 rule clean
-  command = rm -rf ./codefetch ./build
+  command = rm -rf ./codefetch ./build ./.ninja_log
 build clean: clean
 
 rule install_bin

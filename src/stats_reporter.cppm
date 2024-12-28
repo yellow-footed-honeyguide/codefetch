@@ -1,4 +1,5 @@
 module;  
+#include <print>       
 #include <locale>       
 #include <vector>       
 #include <sstream>      
@@ -12,21 +13,17 @@ import lines_count;
 
 export class StatsPrinter {
 public:
-    // Print formatted line count statistics
+    // Show line counter statistics (-c, --line_counter)
     static void print_total_lines(const LineCount& total_count) {  
-        // Print colored header using ANSI escape codes
-        std::cout << "\033[1;34mTotal Lines\033[0m\n";                   
-        // Print code lines with atomic load
-        std::cout << "Code:     " << format_number(total_count.code.load()) << '\n';    
-        // Print comment lines with atomic load
-        std::cout << "Comments: " << format_number(total_count.comments.load()) << '\n'; 
-        // Print total
-        std::cout << "Total:    " << format_number(total_count.code.load() + total_count.comments.load()) << "\n\n"; 
+        std::println("\033[1;34mTotal Lines\033[0m"); 
+        std::println("Code:     {}", format_number(total_count.code.load()));   
+        std::println("Comments: {}", format_number(total_count.comments.load())); 
+        std::println("Total:    {}\n", format_number(total_count.code.load() + total_count.comments.load()));
     }    
     
-    // Print language statistics with percentages and line counts
+    // Show language statistics (-l, --languages)
     static void print_language_stats(const LanguageStats& language_stats) {
-        std::cout << "\033[1;34mLanguages\033[0m\n"; // Print colored header
+        std::println("\033[1;34mLanguages\033[0m"); 
         auto sorted_stats = language_stats.get_sorted_stats(); // Get sorted language statistics
         size_t total_lines = language_stats.get_total_lines(); // Get total line count
         size_t other_lines = 0; // Track remaining languages' lines
@@ -36,9 +33,7 @@ public:
             double percentage = (static_cast<double>(lines) / total_lines) * 100.0; // Calculate percentage
             if (displayed_languages < 5) { // Display top 5 languages
                 // Format output with proper alignment
-                std::cout << std::left << std::setw(20) << language 
-                        << std::right << std::setw(5) << std::fixed << std::setprecision(1) << percentage 
-                        << "% (" << format_number(lines) << " lines)\n";
+                std::println("{:<20}{:>5.1f}% ({} lines)", language, percentage, format_number(lines));    
                 displayed_languages++;
             } else {
                 other_lines += lines; // Accumulate remaining lines
@@ -49,9 +44,8 @@ public:
             // Calculate others percentage
             double other_percentage = (static_cast<double>(other_lines) / total_lines) * 100.0;  
             // Format output for "Others" category
-            std::cout << std::left << std::setw(20) << "Others" 
-                    << std::right << std::setw(5) << std::fixed << std::setprecision(1) << other_percentage 
-                    << "% (" << format_number(other_lines) << " lines)\n";
+            //std::cout << std::left << std::setw(20) << "Others" << std::right << std::setw(5) << std::fixed << std::setprecision(1) << other_percentage << "% (" << format_number(other_lines) << " lines)\n";
+            std::println(":<20Others {:>5.1f}% ({} lines)", other_percentage, format_number(other_lines));       
         }
     }
 

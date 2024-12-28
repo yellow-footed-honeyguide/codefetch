@@ -34,7 +34,7 @@ ninja
 # for system-wide installation (may require elevated privileges):
 sudo ninja install
 # for system-wide removal (may require elevated privileges):
-sudo ninja unstall
+sudo ninja uninstall
 ```
 
 ## Usage

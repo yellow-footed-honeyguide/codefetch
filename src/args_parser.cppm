@@ -1,10 +1,10 @@
-module;  
-#include <string>         
-#include <vector>         
-#include <map>            
-#include <stdexcept>
+module; 
+#include <print>
 #include <iostream>
-#include <print>   
+#include <string>      
+#include <vector>       
+#include <map>  
+#include <stdexcept>
 export module args_parser;
 
 export class ArgsParser {
@@ -29,7 +29,8 @@ public:
             const auto& arg = args[i];
             
             if (arg == "-v" || arg == "--version") { // Handle version flag
-                std::cout << program_name << " version " << version << std::endl;
+                //std::cout << program_name << " version " << version << std::endl;
+                println("{} version {}", program_name, version);
                 std::exit(0);
             }
 

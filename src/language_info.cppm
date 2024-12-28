@@ -1,4 +1,5 @@
 module;  
+#include <print>               
 #include <string>               
 #include <vector>               
 #include <unordered_map>        
@@ -20,15 +21,14 @@ public:
     }
 
     void print_stats() const { // Print language distribution
-        std::cout << "\nLanguages:\n";
+        std::println("\nLanguages:");
         std::vector<std::pair<std::string, size_t>> sorted_stats = get_sorted_stats(); // Get sorted statistics
 
         for (const auto& [language, lines] : sorted_stats) { // Structured binding for stat pairs
             double percentage = (static_cast<double>(lines) / total_lines) * 100.0; // Calculate percentage
             if (percentage >= 1.0) { // Only show languages with ≥1% share
                 // Format output with aligned columns
-                std::cout << std::setw(20) << std::left << language
-                        << std::setw(10) << std::right << std::fixed << std::setprecision(1) << percentage << "%\n";
+                std::println("{:<20}{:>10.1f}%", language, percentage);
             }
         }
     }
