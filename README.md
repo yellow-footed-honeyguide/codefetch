@@ -26,12 +26,13 @@ A modern, comprehensive code analysis tool for software projects.
 
 ### Build & Install from source
 ```bash
-git clone https://github.com/yourusername/codefetch.git
+git clone https://github.com/yellow-footed-honeyguide/codefetch.git
 cd codefetch
-mkdir build && cd build
-cmake .. && make
+cmake -S . -B build -G Ninja && cmake --build build
+# now codefetch binary in build dir
+
 # for system-wide installation (may require elevated privileges):
-sudo make install
+sudo ninja install
 ```
 
 ## Usage

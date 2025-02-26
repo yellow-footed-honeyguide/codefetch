@@ -17,6 +17,7 @@
 build/
 build-dir/
 builddir/
+cmake-build-debug/
 Debug/
 Release/
 x64/
