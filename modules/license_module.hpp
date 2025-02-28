@@ -1,16 +1,15 @@
-#ifndef LICENSE_MODULE_HPP
-#define LICENSE_MODULE_HPP
+#pragma once
 
 #include "statistics_module.hpp"
-#include <string>             // [C++98]
-#include <unordered_map>      // [C++11]
-#include <regex>              // [C++11]
+#include <string>
+#include <unordered_map>
+#include <regex>
 
 class LicenseModule : public CodeFetchModule {
 private:
-    std::string detected_license; // [C++11] Store detected license type
+    std::string detected_license; // Store detected license type
 
-    // [C++11] Map of license patterns using regex
+    // Map of license patterns using regex
     std::unordered_map<std::string, std::regex> license_patterns = { 
         {"MIT", std::regex("MIT License|Permission is hereby granted, free of charge,|The MIT License \\(MIT\\)")},
         {"GPL-3.0", std::regex("GNU GENERAL PUBLIC LICENSE|Version 3,")},
@@ -31,11 +30,10 @@ private:
     };
 
 public:
-    void process_file(const fs::path& file_path) override; // [C++17] Process file implementation
-    void print_stats() const override;                     // [C++11] Print statistics implementation
+    void process_file(const fs::path& file_path) override; // Process file implementation
+    void print_stats() const override;                     // Print statistics implementation
 
 private:
-    void detect_license(const std::string& content);       // [C++11] License detection helper method
+    void detect_license(const std::string& content);       // License detection helper method
 };
 
-#endif // LICENSE_MODULE_HPP

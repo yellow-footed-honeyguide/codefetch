@@ -1,24 +1,21 @@
-#ifndef THREAD_SAFE_QUEUE_HPP
-#define THREAD_SAFE_QUEUE_HPP
+#pragma once
 
-#include <queue>                     // [C++98] Standard queue container
-#include <mutex>                     // [C++11] Mutex for thread synchronization
-#include <condition_variable>        // [C++11] Condition variable for thread waiting
-#include <chrono>                    // [C++11] Time utilities
-#include <filesystem>                // [C++17] Filesystem path handling
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <filesystem>
 
 class ThreadSafeQueue {
 private:
-    std::queue<std::filesystem::path> queue;  // [C++17] Queue storing filesystem paths
-    mutable std::mutex mutex;                 // [C++11] Mutex for thread-safe access
-    std::condition_variable cond;             // [C++11] Condition variable for thread signaling
-    bool finished = false;                    // [C++11] Flag for queue completion with in-class initializer
+    std::queue<std::filesystem::path> queue;  // Queue storing filesystem paths
+    mutable std::mutex mutex;                 //  Mutex for thread-safe access
+    std::condition_variable cond;             // Condition variable for thread signaling
+    bool finished = false;                    // Flag for queue completion with in-class initializer
 
 public:
-    void push(const std::filesystem::path& item);  // [C++17] Add path to queue
-    bool pop(std::filesystem::path& item);         // [C++17] Remove and return path from queue
-    void finish();                                 // [C++11] Mark queue as complete
-    bool empty() const;                            // [C++11] Check if queue is empty
+    void push(const std::filesystem::path& item);  // Add path to queue
+    bool pop(std::filesystem::path& item);         // Remove and return path from queue
+    void finish();                                 // Mark queue as complete
+    bool empty() const;                            // Check if queue is empty
 };
 
-#endif // THREAD_SAFE_QUEUE_HPP

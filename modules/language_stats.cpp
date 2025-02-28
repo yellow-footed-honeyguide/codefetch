@@ -1,25 +1,25 @@
-#include <iostream>    // [C++98]
-#include <iomanip>     // [C++98]
-#include <algorithm>   // [C++98]
-#include <vector>      // [C++98]
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <vector>
 
 #include "language_stats.hpp"
 
-void LanguageStats::add_file(const fs::path& file_path, size_t lines) { // [C++17] Add file with line count to stats
-    std::string language = detect_language(file_path);                  // Get language from file extension
-    language_lines[language] += lines;                                  // [C++11] Update language line count
-    total_lines += lines;                                               // Update total lines
+void LanguageStats::add_file(const fs::path& file_path, size_t lines) {  // Add file with line count to stats
+    std::string language = detect_language(file_path);  // Get language from file extension
+    language_lines[language] += lines;                  // Update language line count
+    total_lines += lines;                               // Update total lines
 }
 
-void LanguageStats::print_stats() const {                               // [C++11] Print language distribution
+void LanguageStats::print_stats() const {               // Print language distribution
     std::cout << "\nLanguages:\n";
 
-    std::vector<std::pair<std::string, size_t>> sorted_stats = get_sorted_stats(); // [C++11] Get sorted statistics
+    std::vector<std::pair<std::string, size_t>> sorted_stats = get_sorted_stats(); // Get sorted statistics
 
-    for (const auto& [language, lines] : sorted_stats) {                 // [C++17] Structured binding for stat pairs
+    for (const auto& [language, lines] : sorted_stats) {  // Structured binding for stat pairs
         double percentage = (static_cast<double>(lines) / total_lines) * 100.0;  // Calculate percentage
         if (percentage >= 1.0) {                                         // Only show languages with ≥1% share
-            // [C++11] Format output with aligned columns
+            // Format output with aligned columns
             std::cout << std::setw(20) << std::left << language
                       << std::setw(10) << std::right << std::fixed << std::setprecision(1) << percentage << "%\n";
         }

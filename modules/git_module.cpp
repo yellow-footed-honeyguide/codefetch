@@ -1,43 +1,42 @@
-#include <iomanip>      // [C++11]
-#include <ctime>        // [C++98]
-#include <sstream>      // [C++98]
-#include <regex>        // [C++11]
-#include <numeric>      // [C++98]
-#include <chrono>       // [C++11]
-#include <atomic>       // [C++11]
-#include <iostream>     // [C++98]
-#include <algorithm>    // [C++98]
+#include <iomanip>
+#include <ctime>
+#include <sstream>
+#include <regex>
+#include <chrono>
+#include <atomic>
+#include <iostream>
+#include <algorithm>
 
 #include "git_module.hpp"
 #include "../src/output_formatter.hpp"
 
-std::atomic<bool> GitModule::interrupt_requested(false);  // [C++11] Atomic flag for interrupting processing
+std::atomic<bool> GitModule::interrupt_requested(false);  // Atomic flag for interrupting processing
 
-GitModule::GitModule() : repo(nullptr), commit_count(0) { // [C++11] Constructor with member initializers
-    git_libgit2_init();                                   // Initialize libgit2 library
+GitModule::GitModule() : repo(nullptr), commit_count(0) {    // Constructor with member initializers
+    git_libgit2_init();                                      // Initialize libgit2 library
 }
 
-GitModule::~GitModule() {                                 // [C++11] Destructor with resource cleanup
+GitModule::~GitModule() {                                    // Destructor with resource cleanup
     if (repo) {
         git_repository_free(repo);
     }
     git_libgit2_shutdown();
 }
 
-void GitModule::process_file(const fs::path& file_path) { // [C++17] Process file using filesystem path
+void GitModule::process_file(const fs::path& file_path) {    // Process file using filesystem path
     if (!repo) {
         try {
             if (git_repository_open(&repo, file_path.parent_path().c_str()) != 0) { // [C++17] Open git repo from path
                 return;
             }
-            process_commits();                                  // Process all commits in repository
-        } catch (const std::exception& e) {                     // [C++11] Exception handling
+            process_commits();                               // Process all commits in repository
+        } catch (const std::exception& e) {                  // Exception handling
             std::cerr << "Error processing Git repository: " << e.what() << std::endl;
         }
     }
 }
 
-// [C++11] Static callback function for commit processing
+// Static callback function for commit processing
 int GitModule::commit_callback(const git_commit* commit, void* payload) {
     GitModule* self = static_cast<GitModule*>(payload);        // [C++11] Cast payload to GitModule pointer
     self->commit_count++;                                      // Increment commit counter

@@ -29,10 +29,10 @@ A modern, comprehensive code analysis tool for software projects.
 git clone https://github.com/yellow-footed-honeyguide/codefetch.git
 cd codefetch
 cmake -S . -B build -G Ninja && cmake --build build
-# now codefetch binary in build dir
+# codefetch binary in build dir now
 
 # for system-wide installation (may require elevated privileges):
-sudo ninja install
+cd build && sudo ninja install && cd ..
 ```
 
 ## Usage
