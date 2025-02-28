@@ -22,7 +22,6 @@ set(SOURCES
         src/main.cpp
         src/file_utils.cpp
         src/line_count_util.cpp
-        src/stats_printer.cpp
         src/thread_safe_queue.cpp
         src/output_formatter.cpp
         modules/line_counter_module.cpp

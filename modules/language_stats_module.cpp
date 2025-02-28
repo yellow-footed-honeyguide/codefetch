@@ -1,5 +1,4 @@
 #include "language_stats_module.hpp"
-#include "../src/stats_printer.hpp"
 #include "../src/line_count_util.hpp"
 #include "../src/output_formatter.hpp"
 

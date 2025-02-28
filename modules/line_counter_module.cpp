@@ -1,5 +1,4 @@
 #include "line_counter_module.hpp"
-#include "../src/stats_printer.hpp"
 #include "../src/output_formatter.hpp"
 
 void LineCounterModule::process_file(const fs::path& file_path) {  // Process single file for line counting
