@@ -10,7 +10,7 @@
 class GitModule : public CodeFetchModule {
 private:
     git_repository* repo;           // Git repository handle
-    std::string first_commit_date;  //  Store first commit date
+    std::string first_commit_date;  // Store first commit date
     std::string last_commit_date;   // Store last commit date
     size_t commit_count;            // Total number of commits
     
