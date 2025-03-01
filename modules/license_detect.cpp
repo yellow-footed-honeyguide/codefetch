@@ -1,7 +1,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "license_module.hpp"
+#include "license_detect.hpp"
 #include "../src/output_formatter.hpp"
 
 void LicenseModule::process_file(const fs::path &file_path) { // Process potential license file

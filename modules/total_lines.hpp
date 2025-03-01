@@ -1,6 +1,6 @@
 #pragma once
 
-#include "statistics_module.hpp"
+#include "codefetch_module_interface.hpp"
 #include "../src/line_count_util.hpp"
 
 class LineCounterModule : public CodeFetchModule {  // Module for counting code lines

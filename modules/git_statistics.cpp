@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "git_module.hpp"
+#include "git_statistics.hpp"
 #include "../src/output_formatter.hpp"
 
 std::atomic<bool> GitModule::interrupt_requested(false);  // Atomic flag for interrupting processing

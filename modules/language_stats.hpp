@@ -1,23 +1,14 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <filesystem>
+#include "codefetch_module_interface.hpp" // Include base module
+#include "language_stats_lib.hpp"    // Include language stats
 
-namespace fs = std::filesystem; // Namespace alias for filesystem
-
-class LanguageStats {
-public:
-    void add_file(const fs::path& file_path, size_t lines); // Add file to statistics
-    void print_stats() const;                               // Print language statistics
-    std::vector<std::pair<std::string, size_t>> get_sorted_stats() const;  // Get sorted statistics
-    size_t get_total_lines() const { return total_lines; }  // Getter for total lines
-
+class LanguageStatsModule : public CodeFetchModule { // Derive from base module
 private:
-    std::unordered_map<std::string, size_t> language_lines; // Hash map for language line counts
-    size_t total_lines = 0;                                 // Total lines counter with in-class init
+    LanguageStats stats;                             // tatistics storage
 
-    std::string detect_language(const fs::path& file_path) const; // Detect file language
+public:
+    void process_file(const fs::path& file_path) override; // Process file implementation
+    void print_stats() const override;                     // Print statistics implementation
 };
 

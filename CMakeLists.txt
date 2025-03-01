@@ -24,12 +24,12 @@ set(SOURCES
         src/line_count_util.cpp
         src/thread_safe_queue.cpp
         src/output_formatter.cpp
-        modules/line_counter_module.cpp
+        modules/total_lines.cpp
+        modules/language_stats_lib.cpp
         modules/language_stats.cpp
-        modules/language_stats_module.cpp
-        modules/metabuild_system_module.cpp
-        modules/license_module.cpp
-        modules/git_module.cpp
+        modules/metabuild_system.cpp
+        modules/license_detect.cpp
+        modules/git_statistics.cpp
 )
 
 # Create executable target

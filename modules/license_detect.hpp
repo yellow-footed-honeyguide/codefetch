@@ -1,6 +1,6 @@
 #pragma once
 
-#include "statistics_module.hpp"
+#include "codefetch_module_interface.hpp"
 #include <string>
 #include <unordered_map>
 #include <regex>

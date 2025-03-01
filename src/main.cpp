@@ -7,13 +7,13 @@
 
 #include "file_utils.hpp"
 #include "args_parser.hpp"
-#include "license_module.hpp"
-#include "statistics_module.hpp"
+#include "license_detect.hpp"
+#include "codefetch_module_interface.hpp"
 #include "thread_safe_queue.hpp"
-#include "modules/git_module.hpp"
-#include "line_counter_module.hpp"
-#include "language_stats_module.hpp"
-#include "metabuild_system_module.hpp"
+#include "modules/git_statistics.hpp"
+#include "total_lines.hpp"
+#include "language_stats.hpp"
+#include "metabuild_system.hpp"
 
 
 namespace fs = std::filesystem;
@@ -37,15 +37,15 @@ int main(int argc, char *argv[]) {
     ArgsParser parser("CodeFetch", PROJECT_VERSION);  // Initialize parser
     std::string dir_path;                                            // Directory path storage
 
-    bool show_line_counter = false;
+    bool show_total_lines = false;
     bool show_languages = false;
     bool show_git = false;
     bool show_metabuild_system = false;
     bool show_license = false;
 
     // Register all flags
-    parser.add_flag("line_counter", &show_line_counter);      
-    parser.add_flag("c", &show_line_counter);
+    parser.add_flag("total_lines", &show_total_lines);
+    parser.add_flag("t", &show_total_lines);
     parser.add_flag("languages", &show_languages);
     parser.add_flag("l", &show_languages);
     parser.add_flag("git-statistics", &show_git);
@@ -71,14 +71,14 @@ int main(int argc, char *argv[]) {
     std::vector<std::unique_ptr<CodeFetchModule>> modules;  // Container for analysis modules
     // Create module instances using make_unique
     // Default: enable all modules
-    if (!show_languages && !show_license && !show_metabuild_system && !show_git && !show_line_counter) {
+    if (!show_languages && !show_license && !show_metabuild_system && !show_git && !show_total_lines) {
         modules.push_back(std::make_unique<LineCounterModule>());
         modules.push_back(std::make_unique<LanguageStatsModule>());
         modules.push_back(std::make_unique<GitModule>());
         modules.push_back(std::make_unique<MetabuildSystemModule>());
         modules.push_back(std::make_unique<LicenseModule>());
     } else { // Enable selected modules
-        if (show_line_counter) modules.push_back(std::make_unique<LineCounterModule>());
+        if (show_total_lines) modules.push_back(std::make_unique<LineCounterModule>());
         if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>());
         if (show_metabuild_system) modules.push_back(std::make_unique<MetabuildSystemModule>());
         if (show_license) modules.push_back(std::make_unique<LicenseModule>());

@@ -5,7 +5,7 @@
 #include <atomic>
 
 #include <git2.h>
-#include "statistics_module.hpp"
+#include "codefetch_module_interface.hpp"
 
 class GitModule : public CodeFetchModule {
 private:

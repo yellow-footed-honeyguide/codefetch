@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "metabuild_system_module.hpp"
+#include "metabuild_system.hpp"
 #include "../src/output_formatter.hpp"
 
 void MetabuildSystemModule::process_file(const fs::path& file_path) { // Process file for build system detection

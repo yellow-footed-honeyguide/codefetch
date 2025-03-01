@@ -1,4 +1,4 @@
-#include "line_counter_module.hpp"
+#include "total_lines.hpp"
 #include "../src/output_formatter.hpp"
 
 void LineCounterModule::process_file(const fs::path& file_path) {  // Process single file for line counting
@@ -12,11 +12,11 @@ void LineCounterModule::print_stats() const {                      // Print line
 
     // Prepare formatted statistics items
     std::vector<std::pair<std::string, std::string>> items = {
-        {"Total", OutputFormatter::format_large_number(total)},
+        {"Overall", OutputFormatter::format_large_number(total)},
         {"Code", OutputFormatter::format_large_number(total_count.code)},
         {"Comm.", OutputFormatter::format_large_number(total_count.comments)},
         {"Other", OutputFormatter::format_large_number(other)}
     };
 
-    OutputFormatter::print_section("Lines of Code", "⚑", items); // Print formatted statistics
+    OutputFormatter::print_section("Total Lines", "⚑", items); // Print formatted statistics
 }

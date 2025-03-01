@@ -4,7 +4,7 @@
 #include <regex>
 #include <unordered_map>
 #include <unordered_set>
-#include "statistics_module.hpp"
+#include "codefetch_module_interface.hpp"
 
 class MetabuildSystemModule : public CodeFetchModule {
 private:
