@@ -4,6 +4,7 @@
 #include <vector>
 #include <atomic>
 #include <filesystem>
+#include <chrono>
 
 #include "file_utils.hpp"
 #include "args_parser.hpp"
@@ -17,6 +18,24 @@
 
 
 namespace fs = std::filesystem;
+
+// Formatting the output of program running time
+std::string formatDuration(std::chrono::milliseconds ms) {
+    using namespace std::chrono;
+    auto secs = duration_cast<seconds>(ms);
+    ms -= duration_cast<milliseconds>(secs);
+    auto mins = duration_cast<minutes>(secs);
+    secs -= duration_cast<seconds>(mins);
+    auto hrs = duration_cast<hours>(mins);
+    mins -= duration_cast<minutes>(hrs);
+
+    std::string result;
+    if (hrs.count() > 0) result += std::to_string(hrs.count()) + "h ";
+    if (mins.count() > 0) result += std::to_string(mins.count()) + "m ";
+    if (secs.count() > 0) result += std::to_string(secs.count()) + "s ";
+    if (ms.count() > 0) result += std::to_string(ms.count()) + "ms";
+    return result.empty() ? "0s" : result;
+}
 
 ThreadSafeQueue file_queue;                 // Thread-safe queue for parallel file processing
 std::atomic<size_t> files_processed{0};  // Atomic counter for tracking progress
@@ -34,6 +53,9 @@ void process_files(std::vector<std::unique_ptr<CodeFetchModule>> &modules) {
 }
 
 int main(int argc, char *argv[]) {
+    // Start timer;
+    auto start = std::chrono::high_resolution_clock::now();
+
     ArgsParser parser("CodeFetch", PROJECT_VERSION);  // Initialize parser
     std::string dir_path;                                            // Directory path storage
 
@@ -112,6 +134,12 @@ int main(int argc, char *argv[]) {
     for (const auto &module : modules) {  // Print results from all modules
         module->print_stats();
     }
+
+    // End timer and print result
+    auto end = std::chrono::high_resolution_clock::now();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "⏲ " << ms / 1000 << "s " << ms % 1000 << "ms\n";
+    // std::cout << "⏲ 7,200 files | 2h 15m 30s" << std::endl;
 
     return 0;
 }

@@ -32,7 +32,7 @@ public:
             }
 
             if (arg == "-h" || arg == "--help") { // Handle help flag
-                std::cout << "-c, --line_counter       Show line counter statistics "<< std::endl;
+                std::cout << "-t, --total-lines        Show total lines (Code + Comments) "<< std::endl;
                 std::cout << "-l, --languages          Show language statistics"<< std::endl;
                 std::cout << "-g, --git-statistics     Show git statistics information"<< std::endl;
                 std::cout << "-m, --metabuild_system   Show metabuild system information"<< std::endl;
@@ -59,17 +59,17 @@ public:
                 }
             }
             
-            if (directory.empty()) {                 // Handle directory argument
+            if (directory.empty()) {           // Handle directory argument
                 directory = arg;
             }
         }
         
-        if (directory.empty()) {                     // Check required directory
+        if (directory.empty()) {               // Check required directory
             throw std::runtime_error("Directory path is required");
         }
     }
 
-    const std::string& get_directory() const {       // Directory getter
+    const std::string& get_directory() const {  // Directory getter
         return directory;
     }
 };
