@@ -6,31 +6,48 @@
 #include <atomic>
 #include <iostream>
 #include <algorithm>
+#include <format>
+
+#include <locale> // For thousands separators
+#include <sstream> // For std::stringstream
+
+// Function to format a number with thousands separators
+std::string format_with_commas(size_t number) {
+    std::stringstream ss;
+    ss.imbue(std::locale("")); // Use the system's locale for thousands separators
+    ss << number;
+    return ss.str();
+}
+
 
 #include "git_statistics.hpp"
 #include "../src/output_formatter.hpp"
 
 std::atomic<bool> GitModule::interrupt_requested(false);  // Atomic flag for interrupting processing
 
-GitModule::GitModule() : repo(nullptr), commit_count(0) {    // Constructor with member initializers
-    git_libgit2_init();                                      // Initialize libgit2 library
+GitModule::GitModule(size_t contributors_count) :  // Constructor with member initializers
+                   contributors_count(contributors_count),
+                   repo(nullptr),
+                   commit_count(0)
+{
+    git_libgit2_init();  // Initialize libgit2 library
 }
 
-GitModule::~GitModule() {                                    // Destructor with resource cleanup
+GitModule::~GitModule() {  // Destructor with resource cleanup
     if (repo) {
         git_repository_free(repo);
     }
     git_libgit2_shutdown();
 }
 
-void GitModule::process_file(const fs::path& file_path) {    // Process file using filesystem path
+void GitModule::process_file(const fs::path& file_path) {  // Process file using filesystem path
     if (!repo) {
         try {
-            if (git_repository_open(&repo, file_path.parent_path().c_str()) != 0) { // Open git repo from path
+            if (git_repository_open(&repo, file_path.parent_path().c_str()) != 0) {  // Open git repo from path
                 return;
             }
-            process_commits();                               // Process all commits in repository
-        } catch (const std::exception& e) {                  // Exception handling
+            process_commits();               // Process all commits in repository
+        } catch (const std::exception& e) {  // Exception handling
             std::cerr << "Error processing Git repository: " << e.what() << std::endl;
         }
     }
@@ -38,18 +55,18 @@ void GitModule::process_file(const fs::path& file_path) {    // Process file usi
 
 // Static callback function for commit processing
 int GitModule::commit_callback(const git_commit* commit, void* payload) {
-    GitModule* self = static_cast<GitModule*>(payload);        // Cast payload to GitModule pointer
-    self->commit_count++;                                      // Increment commit counter
+    GitModule* self = static_cast<GitModule*>(payload);  // Cast payload to GitModule pointer
+    self->commit_count++;                                // Increment commit counter
 
-    const git_signature* author = git_commit_author(commit);   // Get commit author information
-    std::string name(author->name);                            // Convert author name to string
-    std::string email(author->email);                          // Convert author email to string
-    self->contributor_commits[name][email]++;                  // Update commit count for author
+    const git_signature* author = git_commit_author(commit); // Get commit author information
+    std::string name(author->name);                      // Convert author name to string
+    std::string email(author->email);                    // Convert author email to string
+    self->contributor_commits[name][email]++;            // Update commit count for author
 
-    git_time_t time = git_commit_time(commit);                 // Get commit timestamp
-    char time_str[20];                                         // Buffer for formatted time
+    git_time_t time = git_commit_time(commit);           // Get commit timestamp
+    char time_str[20];                                   // Buffer for formatted time
     strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&time));  // Format timestamp
-    std::string commit_date(time_str);                         // Convert to string
+    std::string commit_date(time_str);                   // Convert to string
 
     // Update first and last commit dates
     if (self->first_commit_date.empty() || commit_date < self->first_commit_date) {
@@ -62,9 +79,9 @@ int GitModule::commit_callback(const git_commit* commit, void* payload) {
     return 0;
 }
 
-void GitModule::process_commits() {                        // Process all commits in repository
+void GitModule::process_commits() {                            // Process all commits in repository
     git_revwalk* walker;
-    if (git_revwalk_new(&walker, repo) != 0) {             // Create revision walker
+    if (git_revwalk_new(&walker, repo) != 0) {                 // Create revision walker
         std::cerr << "Failed to create revision walker." << std::endl;
         return;
     }
@@ -98,8 +115,8 @@ void GitModule::process_commits() {                        // Process all commit
     git_revwalk_free(walker);  // Free revision walker
 }
 
-void GitModule::interrupt() {             // Interrupt commit processing
-    interrupt_requested.store(true);   // Set atomic interrupt flag
+void GitModule::interrupt() {            // Interrupt commit processing
+    interrupt_requested.store(true);  // Set atomic interrupt flag
 }
 
 std::string GitModule::format_number(size_t number) const { // Format numbers with locale
@@ -111,8 +128,8 @@ std::string GitModule::format_number(size_t number) const { // Format numbers wi
 
 // String truncation utility
 std::string GitModule::truncate_string(const std::string& str, size_t width) const {
-    if (str.length() > width) {                            // Check if truncation needed
-        return str.substr(0, width - 3) + "...";   // Add ellipsis
+    if (str.length() > width) {                           // Check if truncation needed
+        return str.substr(0, width - 3) + "...";  // Add ellipsis
     }
     return str;
 }
@@ -144,18 +161,33 @@ void GitModule::print_stats() const {
               [](const auto& a, const auto& b) { return std::get<1>(a) > std::get<1>(b); });
 
     std::cout << "☺ Top Contributors" << std::endl;
-    // Limit to top 5 Contributor in output list
-    size_t top_contributors = std::min(contributor_stats.size(), static_cast<size_t>(5));
+    // Limit length of contributors list
+    size_t top_contributors = std::min(contributor_stats.size(), static_cast<size_t>(contributors_count));
     double others_percentage = 0.0;
     size_t others_commits = 0;
 
-    // Print top contributors
     for (size_t i = 0; i < top_contributors; ++i) {
-        const auto& [name, percentage, commits] = contributor_stats[i]; // [C++17] Structured binding
-        // Format contributor statistics
-        std::cout << "  ╰─ " << std::left << std::setw(20) << OutputFormatter::truncate(name, 20)
-                  << ": " << std::right << std::setw(5) << OutputFormatter::format_percentage(percentage)
-                  << "  (" << OutputFormatter::format_large_number(commits) << " commits)" << std::endl;
+        const auto& [name, percentage, commits] = contributor_stats[i]; // Structured binding for tuple
+
+        // Format name with truncation if needed
+        std::string display_name = name;
+        if (display_name.length() > 25) {
+            display_name = display_name.substr(0, 22) + "...";
+        }
+
+        // Format commits with thousands separators
+        std::stringstream ss;
+        ss.imbue(std::locale(""));  // Use system locale for thousands separator
+        ss << commits;
+        std::string formatted_commits = ss.str();
+
+        // Output the formatted line
+        std::cout << std::format(
+            "  ╰─ {:<25} : {:>6.1f}% ({:>7} commits)\n",
+            display_name,      // Name (padded/truncated to 25 chars)
+            percentage,             // Percentage with 1 decimal place
+            formatted_commits  // Commits with thousands separators
+        );
     }
 
     // Calculate statistics for remaining contributors
@@ -166,11 +198,20 @@ void GitModule::print_stats() const {
         others_commits += commits;
     }
 
-    if (contributor_stats.size() > 5) { // Print "Others" category if needed
-        // Format "Others" statistics
-        std::cout << "  ╰─ " << std::left << std::setw(20) << "Others"
-                  << ": " << std::right << std::setw(5) << OutputFormatter::format_percentage(others_percentage)
-                  << "  (" << OutputFormatter::format_large_number(others_commits) << " commits)" << std::endl;
+    // Print "Others" category if there are remaining contributors
+    if (contributor_stats.size() > top_contributors) {
+        std::stringstream ss;  // Format Others line using the same format as individual contributors
+        ss.imbue(std::locale("")); // Use system locale for thousands separator
+        ss << others_commits;
+        std::string formatted_others_commits = ss.str();
+
+        std::cout << std::format(
+            "\033[3m  ╰─ {:<25} : {:>6.1f}% ({:>7} commits)\033[0m\n", // italic
+            "Others (total)",         // Fixed name
+            others_percentage,        // Percentage with 1 decimal place
+            formatted_others_commits  // Commits with thousands separators
+        );
     }
+
     std::cout << std::endl;
 }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)  # Minimum CMake version required
 
 # Project definition
-project(codefetch VERSION 0.9.8)
+project(codefetch VERSION 0.9.9)
 
 # Set C++ version
 set(CMAKE_CXX_STANDARD 20)
