@@ -1,6 +1,9 @@
 #include "total_lines.hpp"
 #include "../src/output_formatter.hpp"
 
+#include <iostream>
+#include <format> // для std::format (C++20)
+
 void LineCounterModule::process_file(const fs::path& file_path) {  // Process single file for line counting
     counter.count_lines(file_path);                                // Count lines in file
 }
@@ -10,13 +13,13 @@ void LineCounterModule::print_stats() const {                      // Print line
     size_t total = total_count.code + total_count.comments;      // Calculate total lines
     size_t other = total - total_count.code - total_count.comments; // Calculate other lines
 
-    // Prepare formatted statistics items
-    std::vector<std::pair<std::string, std::string>> items = {
-        {"Overall", OutputFormatter::format_large_number(total)},
-        {"Code", OutputFormatter::format_large_number(total_count.code)},
-        {"Comm.", OutputFormatter::format_large_number(total_count.comments)},
-        {"Other", OutputFormatter::format_large_number(other)}
-    };
+    // create string with results for "Total Lines" section
+    std::string total_result_str = std::format("{} (Total) = {} (Code) + {} (Comm.) + {} (Other)\n",
+                                 OutputFormatter::format_large_number(total),
+                                 OutputFormatter::format_large_number(total_count.code),
+                                 OutputFormatter::format_large_number(total_count.comments),
+                                 OutputFormatter::format_large_number(other));
 
-    OutputFormatter::print_section("Total Lines", "⚑", items); // Print formatted statistics
+    std::cout << "⚑ Total Lines" << std::endl;
+    std::cout << "╰─ " << total_result_str  << std::endl;
 }
