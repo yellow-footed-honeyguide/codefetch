@@ -2,11 +2,17 @@
 #include "../src/line_count_util.hpp"
 #include "../src/output_formatter.hpp"
 
+LanguageStatsModule::LanguageStatsModule(size_t contributors_count): languages_count(contributors_count) {}
+
+// Declaration for compatibility with the base module (unused)
+void LanguageStatsModule::print_stats() const{ print_stats(this->languages_count); }
+
+// Implementation of print statistics with an argument
 void LanguageStatsModule::process_file(const fs::path& file_path) { // Process single file statistics
     stats.add_file(file_path, LineCounter::count_lines_in_file(file_path)); // Count lines and add to statistics
 }
 
-void LanguageStatsModule::print_stats() const {  // Print language statistics
+void LanguageStatsModule::print_stats(size_t languages_count) const{  // Print language statistics
     // Get sorted language stats
     auto sorted_stats = stats.get_sorted_stats();
     std::vector<std::pair<std::string, double>> formatted_stats; // Container for formatted statistics
@@ -17,7 +23,7 @@ void LanguageStatsModule::print_stats() const {  // Print language statistics
 
     // Process top 5 languages (excluding "Other")
     for (const auto& [language, lines] : sorted_stats) {  // Structured binding
-        if (top_languages >= 5) break;  // Limit to top 5 languages
+        if (top_languages >= languages_count) break;  // Limit printing number languages
         if (language != "Other") {      // Exclude "Other" category
             double percentage = (static_cast<double>(lines) / total_lines) * 100.0;  // Calculate percentage
             formatted_stats.emplace_back(language, percentage);  // Add language stats

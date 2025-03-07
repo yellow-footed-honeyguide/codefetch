@@ -13,7 +13,7 @@ private:
     std::string first_commit_date;  // Store first commit date
     std::string last_commit_date;   // Store last commit date
     size_t commit_count;            // Total number of commits
-    size_t contributors_count;
+    size_t contributors_count;      // Number of contributors displayed in Git statistics
     
     //  Nested map for contributor statistics: name -> email -> commit count
     std::map<std::string, std::map<std::string, size_t>> contributor_commits;

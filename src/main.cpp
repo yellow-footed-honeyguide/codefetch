@@ -95,16 +95,16 @@ int main(int argc, char *argv[]) {
     // Default: enable all modules
     if (!show_languages && !show_license && !show_metabuild_system && !show_git && !show_total_lines) {
         modules.push_back(std::make_unique<LineCounterModule>());
-        modules.push_back(std::make_unique<LanguageStatsModule>());
+        modules.push_back(std::make_unique<LanguageStatsModule>(3));
         modules.push_back(std::make_unique<GitModule>(3));
         modules.push_back(std::make_unique<MetabuildSystemModule>());
         modules.push_back(std::make_unique<LicenseModule>());
     } else { // Enable selected modules
         if (show_total_lines) modules.push_back(std::make_unique<LineCounterModule>());
-        if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>());
+        if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>(20));
         if (show_metabuild_system) modules.push_back(std::make_unique<MetabuildSystemModule>());
         if (show_license) modules.push_back(std::make_unique<LicenseModule>());
-        if (show_git) modules.push_back(std::make_unique<GitModule>(20));
+        if (show_git) modules.push_back(std::make_unique<GitModule>(30));
     }
 
     for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {  // Collect files recursively
