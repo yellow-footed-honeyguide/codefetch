@@ -19,4 +19,3 @@ public:
     static size_t count_lines_in_file(const fs::path& file_path); // Static method for total line count
     const LineCount& get_total_count() const { return total_count; }  // Getter for total counts
 };
-

@@ -4,8 +4,8 @@
 // Print formatted section with title and items using modern string collections
 void OutputFormatter::print_section(const std::string& title, const std::string& icon, 
     const std::vector<std::pair<std::string, std::string>>& items) {
-    std::cout << icon << " " << title << std::endl;                  // [C++11] Print section header with icon
-    for (const auto& [key, value] : items) {                         // [C++17] Structured binding for pair iteration
+    std::cout << icon << " " << title << std::endl;                     // Print section header with icon
+    for (const auto& [key, value] : items) {  // Structured binding for pair iteration
         // Format output with alignment
         std::cout << "  ╰─ " << std::left << std::setw(10) << key << ": " << value << std::endl; 
     }
@@ -16,8 +16,8 @@ void OutputFormatter::print_section(const std::string& title, const std::string&
 void OutputFormatter::print_language_stats(const std::vector<std::pair<std::string, double>>& stats, 
     size_t total_lines) {
     std::cout << "⚐ Languages" << std::endl;
-    for (const auto& [language, percentage] : stats) {               // [C++17] Structured binding for stats pairs
-        size_t lines = static_cast<size_t>(percentage * total_lines / 100); // [C++11] Calculate absolute lines count
+    for (const auto& [language, percentage] : stats) {  // Structured binding for stats pairs
+        size_t lines = static_cast<size_t>(percentage * total_lines / 100); // Calculate absolute lines count
         // Format output with proper alignment and number formatting
         std::cout << "  ╰─ " << std::left << std::setw(10) << truncate(language, 10)   
                   << ": " << std::right << std::setw(5) << format_percentage(percentage) 
@@ -29,7 +29,7 @@ void OutputFormatter::print_language_stats(const std::vector<std::pair<std::stri
 void OutputFormatter::print_contributor_stats(
     const std::vector<std::pair<std::string, double>>& stats) { // Print contributor stats with percentages
     std::cout << "☺ Top Contributors" << std::endl;
-    for (const auto& [name, percentage] : stats) {              // [C++17] Structured binding for contributor data
+    for (const auto& [name, percentage] : stats) {  // Structured binding for contributor data
         // Format contributor info with proper alignment
         std::cout << "  ╰─ " << std::left << std::setw(14) << truncate(name, 14)   
                   << ": " << std::right << std::setw(6) << format_percentage(percentage) << std::endl;
@@ -51,8 +51,8 @@ std::string OutputFormatter::format_large_number(size_t number) {  // Format lar
 }
 
 std::string OutputFormatter::truncate(const std::string& str, size_t width) {  // Truncate string with ellipsis
-    if (str.length() > width) {                                    // Check if truncation is needed
-        return str.substr(0, width - 3) + "...";           // Add ellipsis for truncated strings
+    if (str.length() > width) {                           // Check if truncation is needed
+        return str.substr(0, width - 3) + "...";  // Add ellipsis for truncated strings
     }
     return str;
 }

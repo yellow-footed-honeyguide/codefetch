@@ -24,7 +24,7 @@ void LineCounter::count_lines(const fs::path& file_path) {  // Count lines using
                     in_multiline_comment = false;               // Reset multiline comment flag
                 }
             } else {
-                local_count.code++;                             // Increment code line count
+                local_count.code++;                         // Increment code line count
             }
         } else {
             local_count.comments++;                         // Increment comment count in multiline
