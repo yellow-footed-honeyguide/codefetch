@@ -1,25 +1,21 @@
 #include <functional>
 #include <algorithm>
 #include <unordered_set>
-
+#include <string>
 #include "file_utils.hpp"
+#include "../modules/file_extension_to_language_map.hpp"
 
 namespace FileUtils {
     bool is_source_file(const fs::path& path) {  // Check if file is a source file based on extension
-        static const std::vector<std::string> extensions = { // Static vector of supported extensions
-            ".c", ".cpp", ".cxx", ".cc", ".h", ".hpp", ".hxx", ".py", ".java",
-            ".js", ".ts", ".rb", ".php", ".go", ".rs", ".swift", ".kt",
-            ".vim", ".txt", ".pl", ".mk", ".sh", ".m4", ".yaml", ".yml", ".md",
-            ".license", ".def", ".awk", ".html", ".rc", ".lua", ".csh", ".cs",
-            ".el", ".forth", ".idl", ".json", ".m", ".svg", ".sv", ".wl", ".xml",
-            ".dts", ".dtsi", ".s", ".S", ".asm", ".bash", ".pl", ".dot", ".csv",
-            ".xsl", ".y", ".l", ".ld", ".cmake", ".ac", ".uc", ".smk", ".css",
-            ".service", ".bzl", ".hex", ".ini", ".sed", ".feature", ".mat", ".rb",
-            ".toml", ".tex", ".xsd", ".proto", ".cf", ".dockerfile", ".ps1",
-            ".gotmpl", ".jsonl", ".zsh", ".hh", ".hpp", ".hxx",
-            ".mm", ".scala", ".groovy", ".f", ".f90", ".f95", ".hs",
-            ".jl", ".lisp", ".lsp", ".pas", ".r", ".sql", ".tcl", ".vb", ".vhdl",
-        };
+        // static const std::vector<std::string> extensions = { // Static vector of supported extensions
+
+        // static const std::vector<std::string> extensions = {
+
+        std::vector<std::string> extensions;
+        for (const auto& ext : extension_to_language) {
+            extensions.push_back(ext.first);
+        }
+
 
         static const std::unordered_set<std::string> special_files = { // Hash set of special filenames
             "WORKSPACE", "BUILD.bazel", "meson.build", "CMakeLists.txt", 

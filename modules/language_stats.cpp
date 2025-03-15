@@ -2,7 +2,7 @@
 #include "../src/line_count_util.hpp"
 #include "../src/output_formatter.hpp"
 
-LanguageStatsModule::LanguageStatsModule(size_t contributors_count): languages_count(contributors_count) {}
+LanguageStatsModule::LanguageStatsModule(size_t languages_count): languages_count(languages_count) {}
 
 // Declaration for compatibility with the base module (unused)
 void LanguageStatsModule::print_stats() const{ print_stats(this->languages_count); }

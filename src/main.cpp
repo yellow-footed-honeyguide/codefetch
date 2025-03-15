@@ -101,10 +101,10 @@ int main(int argc, char *argv[]) {
         modules.push_back(std::make_unique<LicenseModule>());
     } else { // Enable selected modules
         if (show_total_lines) modules.push_back(std::make_unique<LineCounterModule>());
-        if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>(20));
+        if (show_languages) modules.push_back(std::make_unique<LanguageStatsModule>(1000));
         if (show_metabuild_system) modules.push_back(std::make_unique<MetabuildSystemModule>());
         if (show_license) modules.push_back(std::make_unique<LicenseModule>());
-        if (show_git) modules.push_back(std::make_unique<GitModule>(30));
+        if (show_git) modules.push_back(std::make_unique<GitModule>(20)); // all possible languages
     }
 
     for (const auto &entry : fs::recursive_directory_iterator(dir_path)) {  // Collect files recursively

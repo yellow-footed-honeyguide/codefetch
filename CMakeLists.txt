@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)  # Minimum CMake version required
 
 # Project definition
-project(codefetch VERSION 0.9.10)
+project(codefetch VERSION 0.10.1)
 
 # Set C++ version
 set(CMAKE_CXX_STANDARD 20)
@@ -30,6 +30,7 @@ set(SOURCES
         modules/metabuild_system.cpp
         modules/license_detect.cpp
         modules/git_statistics.cpp
+        modules/file_extension_to_language_map.cpp
 )
 
 # Create executable target
