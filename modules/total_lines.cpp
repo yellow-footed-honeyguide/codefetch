@@ -14,11 +14,10 @@ void LineCounterModule::print_stats() const {                  // Print line cou
     size_t other = total - total_count.code - total_count.comments; // Calculate other lines
 
     // create string with results for "Total Lines" section
-    std::string total_result_str = std::format("{} (Total) = {} (Code) + {} (Comm.) + {} (Other)\n",
+    std::string total_result_str = std::format("{} (Total) = {} (Code) + {} (Comm.)\n",
                                  OutputFormatter::format_large_number(total),
                                  OutputFormatter::format_large_number(total_count.code),
-                                 OutputFormatter::format_large_number(total_count.comments),
-                                 OutputFormatter::format_large_number(other));
+                                 OutputFormatter::format_large_number(total_count.comments));
 
     std::cout << "⚑ Total Lines" << std::endl;
     std::cout << "╰─ " << total_result_str  << std::endl;
