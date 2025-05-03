@@ -65,7 +65,7 @@ int GitModule::commit_callback(const git_commit* commit, void* payload) {
 
     git_time_t time = git_commit_time(commit);           // Get commit timestamp
     char time_str[20];                                   // Buffer for formatted time
-    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime(&time));  // Format timestamp
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", localtime((const long *)&time));  // Format timestamp
     std::string commit_date(time_str);                   // Convert to string
 
     // Update first and last commit dates

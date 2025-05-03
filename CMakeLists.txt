@@ -50,5 +50,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         ${LIBGIT2_LIBRARIES}
 )
 
+# Link required directories
+target_link_directories(${PROJECT_NAME} PRIVATE
+        ${LIBGIT2_LIBRARY_DIRS}
+)
+
 # Installation setup
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
