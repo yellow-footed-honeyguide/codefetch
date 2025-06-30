@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <filesystem>
+#include <mutex>
 
 #include "thread_safe_queue.hpp"
 
@@ -14,4 +15,3 @@ namespace FileUtils {
     void traverse_directory(const fs::path& dir_path, ThreadSafeQueue& file_queue, 
         std::atomic<size_t>& total_files, int max_depth = 10);
 }
-
