@@ -18,6 +18,6 @@ void LineCounterModule::print_stats() const {
     std::string total_result_str = std::format("{}\n",
                                  OutputFormatter::format_large_number(total));
 
-    std::cout << "⚑ Total Lines  [All Extensions: Code + Comments + Blanks]" << std::endl;
+    std::cout << "⚑ Total Lines [All Extensions: Code + Comments + Blanks]" << std::endl;
     std::cout << "╰─ " << total_result_str  << std::endl;
 }

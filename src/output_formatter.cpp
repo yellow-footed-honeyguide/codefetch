@@ -16,11 +16,11 @@ void OutputFormatter::print_section(const std::string& title, const std::string&
 // Print language statistics with distribution percentages
 void OutputFormatter::print_language_stats(const std::vector<std::pair<std::string, double>>& stats, 
     size_t total_lines) {
-    std::cout << "⚐ Languages    [Code + Comments + Blanks]" << std::endl;
+    std::cout << "⚐ Languages" << std::setw(35) << "[Code + Comments + Blanks]" << std::endl;
     for (const auto& [language, percentage] : stats) {  // Structured binding for stats pairs
         size_t lines = static_cast<size_t>(percentage * total_lines / 100); // Calculate absolute lines count
         // Format output with proper alignment and number formatting
-        std::cout << "  ╰─ " << std::left << std::setw(10) << truncate(language, 10)   
+        std::cout << "  ╰─ " << std::left << std::setw(15) << truncate(language, 15)   
                   << ": " << std::right << std::setw(5) << format_percentage(percentage) 
                   << "  (" << format_large_number(lines) << " lines)" << std::endl;
     }

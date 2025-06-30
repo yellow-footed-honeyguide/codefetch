@@ -2,10 +2,10 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
 #include <filesystem>
+#include <unordered_map>
 
-namespace fs = std::filesystem; // Namespace alias for filesystem
+namespace fs = std::filesystem; 
 
 class LanguageStats {
 public:
@@ -20,4 +20,3 @@ private:
 
     std::string detect_language(const fs::path& file_path) const; // Detect file language
 };
-

@@ -22,7 +22,7 @@ A modern, comprehensive code analysis tool for software projects.
 ## Getting Started
 
 ### Dependencies
-- libgit2 for Git statistics
+- Git `>= 2.25.0` (must be in your `$PATH`)
 
 ### Build & Install from source
 ```bash
