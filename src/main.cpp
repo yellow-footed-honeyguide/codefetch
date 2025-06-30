@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
     // If no flags specified, enable all modules with default settings
     if (!show_languages && !show_license && !show_metabuild_system && !show_git && !show_total_lines) {
         modules.push_back(std::make_unique<LineCounterModule>());     // Line counter
-        modules.push_back(std::make_unique<LanguageStatsModule>(3));  // Top 3 languages
-        modules.push_back(std::make_unique<GitModule>(3));            // Top 3 git contributors
+        modules.push_back(std::make_unique<LanguageStatsModule>(5));  // Top 5 languages
+        modules.push_back(std::make_unique<GitModule>(5));            // Top 5 git contributors
         modules.push_back(std::make_unique<MetabuildSystemModule>()); // Build system detection
         modules.push_back(std::make_unique<LicenseModule>());         // License detection
     } else {
