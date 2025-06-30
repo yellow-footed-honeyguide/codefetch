@@ -1,36 +1,31 @@
-#pragma once
+#pragma once  
 
-#include <map>
-#include <string>
-#include <atomic>
+#include <string>      
+#include <vector>     
 
-#include <git2.h>
-#include "codefetch_module_interface.hpp"
+#include "codefetch_module_interface.hpp"  // Base class interface
 
+// GitModule implements code fetching functionality using Git
 class GitModule : public CodeFetchModule {
 private:
-    git_repository* repo;           // Git repository handle
-    std::string first_commit_date;  // Store first commit date
-    std::string last_commit_date;   // Store last commit date
-    size_t commit_count;            // Total number of commits
-    size_t contributors_count;      // Number of contributors displayed in Git statistics
+    size_t contributors_count;  // Stores number of contributors to track
     
-    //  Nested map for contributor statistics: name -> email -> commit count
-    std::map<std::string, std::map<std::string, size_t>> contributor_commits;
-
-    static std::atomic<bool> interrupt_requested;  // Atomic flag for interrupting processing
-
-    void process_commits();  // Process all commits in repository
-    static int commit_callback(const git_commit* commit, void* payload);  // Static callback for commit processing
-    std::string format_number(size_t number) const; // Format numbers with locale
-    std::string truncate_string(const std::string& str, size_t width) const; // Truncate long strings
-
+    // Executes shell command and returns its output
+    std::string exec_command(const std::string& cmd) const;
+    
 public:
+    // Constructor taking number of contributors as parameter
     GitModule(size_t contributors_count);
-    ~GitModule();  // Destructor with libgit cleanup
+    
+    // Default destructor (no special cleanup needed)
+    ~GitModule() = default;
 
-    void process_file(const fs::path& file_path) override;  // Process file implementation
-    void print_stats() const override;  // If the module uses -g, display 20 contributors instead of 3
-    static void interrupt();  // Interrupt processing method
+    // Processes a single file at given path (override from base class)
+    void process_file(const fs::path& file_path) override;
+    
+    // Prints collected statistics (override from base class)
+    void print_stats() const override;
+    
+    // Empty static interrupt handler (can be called without instance)
+    static void interrupt() {};
 };
-
