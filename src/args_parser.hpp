@@ -5,14 +5,17 @@
 #include <map>
 #include <stdexcept>
 
+std::string dir_for_analysis;
+
 class ArgsParser {
 private:
     std::string program_name;            // Program name storage
     std::string directory;               // Directory path storage
     std::map<std::string, bool*> flags;  // Flag pointers map
     std::string version;                 // Version string
-
+    
 public:
+
     ArgsParser(const std::string& name, const std::string& ver) : // Constructor with program info
         program_name(name), version(ver) {}
 
@@ -63,6 +66,8 @@ public:
                 directory = arg;
             }
         }
+        dir_for_analysis = directory;
+
         
         // If the user did't specify the path, we pass the path to the current directory
         if (directory.empty()) { 

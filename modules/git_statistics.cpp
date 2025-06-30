@@ -1,5 +1,6 @@
 #include <iostream>  
-#include <sstream>   
+#include <sstream>
+#include <string>   
 #include <locale>    
 #include <memory>    
 #include <array>  
@@ -7,6 +8,9 @@
 
 #include "git_statistics.hpp"       
 #include "../src/output_formatter.hpp"  // Custom output formatting utilities
+
+
+extern std::string dir_for_analysis;
 
 // Constructor initializing with number of contributors to display
 GitModule::GitModule(size_t contributors_count) 
@@ -41,15 +45,30 @@ void GitModule::process_file(const fs::path& file_path) {
 // Main method to calculate and display git repository statistics
 void GitModule::print_stats() const {
     // Get total commit count using git rev-list
-    std::string count_output = exec_command("git rev-list --all --count 2>/dev/null");
+    std::string count_output = exec_command(
+        dir_for_analysis.empty() 
+            ? "git rev-list --all --count 2>/dev/null" 
+            : std::format("git -C {} rev-list --all --count 2>/dev/null", dir_for_analysis)
+    );
+
     size_t total_commits = 0;  // Initialize commit counter
     if (!count_output.empty()) {
         total_commits = std::stoull(count_output);  // Convert string to unsigned long long
     }
     
     // Get first and last commit dates using git log
-    std::string first_date = exec_command("git log --reverse --format=\"%ci\" 2>/dev/null | head -n 1");
-    std::string last_date = exec_command("git log -1 --format=\"%ci\" 2>/dev/null");
+    std::string first_date = exec_command(
+    dir_for_analysis.empty()
+        ? R"(git log --reverse --format="%ci" 2>/dev/null | head -n 1)"
+        : std::format(R"(git -C {} log --reverse --format="%ci" 2>/dev/null | head -n 1)", dir_for_analysis)
+    );
+
+
+    std::string last_date = exec_command(
+    dir_for_analysis.empty()
+        ? R"(git log -1 --format="%ci" 2>/dev/null)"
+        : std::format(R"(git -C {} log -1 --format="%ci" 2>/dev/null)", dir_for_analysis)
+    );
     
     // Trim dates to YYYY-MM-DD format
     if (first_date.length() >= 10) first_date = first_date.substr(0, 10);
@@ -69,7 +88,15 @@ void GitModule::print_stats() const {
     
     // Prepare command to get top contributors (limited by contributors_count)
     size_t limit = contributors_count;
-    std::string shortlog_cmd = std::format("git shortlog -sn --all 2>/dev/null | head -n {}", limit);
+
+    std::string shortlog_cmd;
+    if (dir_for_analysis.empty()){
+        shortlog_cmd = std::format("git shortlog -sn --all 2>/dev/null | head -n {}", limit);
+    }
+    else {
+        shortlog_cmd = std::format("git -C {} shortlog -sn --all 2>/dev/null | head -n {}", dir_for_analysis, limit); 
+    }
+
     std::string shortlog_output = exec_command(shortlog_cmd);
     
     // Print contributors section header
