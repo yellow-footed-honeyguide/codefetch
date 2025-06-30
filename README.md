@@ -2,7 +2,11 @@
 
 A modern, comprehensive code analysis tool for software projects.
 
-![codefetch in action](assets/codefetch_in_action.jpg)
+
+  <img src="assets/codefetch_in_action_1.png"><br>
+  <img src="assets/codefetch_in_action_2.png"><br>
+  <img src="assets/codefetch_in_action_3.png"><br>
+
 
 ## Features
 > CodeFetch provides detailed insights into your codebase,offering a complete analysis suite<br> 
