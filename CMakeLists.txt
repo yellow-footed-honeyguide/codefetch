@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.12)  # Minimum CMake version required
+# Minimum CMake version required
+cmake_minimum_required(VERSION 3.12)  
 
 # Project definition
 project(codefetch VERSION 0.12.3)
@@ -10,12 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Define the project version as a preprocessor macro
 add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 
-# Find required packages
-find_package(Threads REQUIRED)  # For multithreading support
+# Find required package (for multithreading support)
+find_package(Threads REQUIRED) 
 
-# Find LibGit2 using pkg-config
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBGIT2 REQUIRED libgit2)
 
 # Define source files
 set(SOURCES
@@ -41,18 +39,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/modules
-        ${LIBGIT2_INCLUDE_DIRS}
-)
-
-# Link required libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE
-        Threads::Threads
-        ${LIBGIT2_LIBRARIES}
-)
-
-# Link required directories
-target_link_directories(${PROJECT_NAME} PRIVATE
-        ${LIBGIT2_LIBRARY_DIRS}
 )
 
 # Installation setup
