@@ -5,7 +5,7 @@
 // Print formatted section with title and items using modern string collections
 void OutputFormatter::print_section(const std::string& title, const std::string& icon, 
     const std::vector<std::pair<std::string, std::string>>& items) {
-    std::cout << icon << " " << title << std::endl;                     // Print section header with icon
+    std::cout << icon << " " << title << std::endl;  // Print section header with icon
     for (const auto& [key, value] : items) {  // Structured binding for pair iteration
         // Format output with alignment
         std::cout << "  ╰─ " << std::left << std::setw(10) << key << ": " << value << std::endl; 
@@ -18,7 +18,8 @@ void OutputFormatter::print_language_stats(const std::vector<std::pair<std::stri
     size_t total_lines) {
     std::cout << "⚐ Languages" << std::setw(35) << "[Code + Comments + Blanks]" << std::endl;
     for (const auto& [language, percentage] : stats) {  // Structured binding for stats pairs
-        size_t lines = static_cast<size_t>(percentage * total_lines / 100); // Calculate absolute lines count
+        // Calculate absolute lines count
+        size_t lines = static_cast<size_t>(percentage * total_lines / 100); 
         // Format output with proper alignment and number formatting
         std::cout << "  ╰─ " << std::left << std::setw(15) << truncate(language, 15)   
                   << ": " << std::right << std::setw(5) << format_percentage(percentage) 
@@ -28,9 +29,11 @@ void OutputFormatter::print_language_stats(const std::vector<std::pair<std::stri
 }
 
 void OutputFormatter::print_contributor_stats(
-    const std::vector<std::pair<std::string, double>>& stats) { // Print contributor stats with percentages
+    // Print contributor stats with percentages
+    const std::vector<std::pair<std::string, double>>& stats) { 
     std::cout << "☺ Top Contributors" << std::endl;
-    for (const auto& [name, percentage] : stats) {  // Structured binding for contributor data
+    // Structured binding for contributor data
+    for (const auto& [name, percentage] : stats) {  
         // Format contributor info with proper alignment
         std::cout << "  ╰─ " << std::left << std::setw(14) << truncate(name, 14)   
                   << ": " << std::right << std::setw(6) << format_percentage(percentage) << std::endl;
@@ -38,21 +41,26 @@ void OutputFormatter::print_contributor_stats(
     std::cout << std::endl;
 }
 
-std::string OutputFormatter::format_percentage(double percentage) { // Format percentage with fixed precision
-    std::ostringstream oss;                                         // String stream for number formatting
-    oss << std::fixed << std::setprecision(1) << std::setw(5) << percentage << "%"; // Format with 1 decimal place
+// Format percentage with fixed precision
+std::string OutputFormatter::format_percentage(double percentage) { 
+    std::ostringstream oss;  // String stream for number formatting
+
+    // Format with 1 decimal place
+    oss << std::fixed << std::setprecision(1) << std::setw(5) << percentage << "%"; 
     return oss.str();
 }
 
-std::string OutputFormatter::format_large_number(size_t number) {  // Format large numbers with locale-aware formatting
-    std::ostringstream oss;                                        // String stream for number formatting
-    oss.imbue(std::locale(""));                            // Use system locale for number formatting
+// Format large numbers with locale-aware formatting
+std::string OutputFormatter::format_large_number(size_t number) {  
+    std::ostringstream oss;      // String stream for number formatting
+    oss.imbue(std::locale(""));  // Use system locale for number formatting
     oss << number;
     return oss.str();
 }
 
-std::string OutputFormatter::truncate(const std::string& str, size_t width) {  // Truncate string with ellipsis
-    if (str.length() > width) {                           // Check if truncation is needed
+// Truncate string with ellipsis
+std::string OutputFormatter::truncate(const std::string& str, size_t width) {  
+    if (str.length() > width) {  // Check if truncation is needed
         return str.substr(0, width - 3) + "...";  // Add ellipsis for truncated strings
     }
     return str;
