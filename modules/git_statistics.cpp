@@ -47,8 +47,8 @@ void GitModule::print_stats() const {
     // Get total commit count using git rev-list
     std::string count_output = exec_command(
         dir_for_analysis.empty() 
-            ? "git rev-list --all --count 2>/dev/null" 
-            : std::format("git -C {} rev-list --all --count 2>/dev/null", dir_for_analysis)
+            ? "git rev-list HEAD --count 2>/dev/null" 
+            : std::format("git -C {} rev-list HEAD --count 2>/dev/null", dir_for_analysis)
     );
 
     size_t total_commits = 0;  // Initialize commit counter
@@ -91,10 +91,10 @@ void GitModule::print_stats() const {
 
     std::string shortlog_cmd;
     if (dir_for_analysis.empty()){
-        shortlog_cmd = std::format("git shortlog -sn --all 2>/dev/null | head -n {}", limit);
+        shortlog_cmd = std::format("git shortlog -sn HEAD 2>/dev/null | head -n {}", limit);
     }
     else {
-        shortlog_cmd = std::format("git -C {} shortlog -sn --all 2>/dev/null | head -n {}", dir_for_analysis, limit); 
+        shortlog_cmd = std::format("git -C {} shortlog -sn HEAD 2>/dev/null | head -n {}", dir_for_analysis, limit); 
     }
 
     std::string shortlog_output = exec_command(shortlog_cmd);
