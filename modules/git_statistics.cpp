@@ -3,11 +3,13 @@
 #include <string>   
 #include <locale>    
 #include <memory>    
-#include <array>  
+#include <array> 
+#include <thread> 
 #include <format>  // Modern string formatting library (C++20)
+  
 
 #include "git_statistics.hpp"       
-#include "../src/output_formatter.hpp"  // Custom output formatting utilities
+#include "../src/output_formatter.hpp"
 
 
 extern std::string dir_for_analysis;
@@ -19,8 +21,8 @@ GitModule::GitModule(size_t contributors_count)
 
 // Executes shell command and returns its output as string
 std::string GitModule::exec_command(const std::string& cmd) const {
-    std::array<char, 128> buffer;  // Fixed-size buffer for reading command output
-    std::string result;            // Accumulates command output
+    std::array<char, 4096> buffer;  // Typical system page size
+    std::string result;             // Accumulates command output
     // Smart pointer managing pipe lifecycle (auto-closes with pclose)
     std::unique_ptr<FILE, int(*)(FILE*)> pipe(popen(cmd.c_str(), "r"), pclose);
 
@@ -44,35 +46,58 @@ void GitModule::process_file(const fs::path& file_path) {
 
 // Main method to calculate and display git repository statistics
 void GitModule::print_stats() const {
-    // Get total commit count using git rev-list
-    std::string count_output = exec_command(
-        dir_for_analysis.empty() 
-            ? "git rev-list HEAD --count 2>/dev/null" 
-            : std::format("git -C {} rev-list HEAD --count 2>/dev/null", dir_for_analysis)
-    );
+    // Prepare optimized git commands with performance flags
+    std::string count_cmd = dir_for_analysis.empty() 
+        ? "git --no-pager rev-list HEAD --count 2>/dev/null"
+        : std::format("git --no-pager -C {} rev-list HEAD --count 2>/dev/null", dir_for_analysis);
+    
+    std::string shortlog_cmd = dir_for_analysis.empty()
+        ? std::format("git --no-pager shortlog -sn HEAD 2>/dev/null | head -n {}", contributors_count)
+        : std::format("git --no-pager -C {} shortlog -sn HEAD 2>/dev/null | head -n {}", dir_for_analysis, contributors_count);
+    
+    // Combined command for both first and last commit dates
+    std::string dates_cmd = dir_for_analysis.empty()
+        ? R"(git --no-pager log HEAD --pretty=format:"%ci" --reverse 2>/dev/null | head -n 1 && echo "SEPARATOR" && git --no-pager log HEAD --pretty=format:"%ci" -n 1 2>/dev/null)"
+        : std::format(R"(git --no-pager -C {} log HEAD --pretty=format:"%ci" --reverse 2>/dev/null | head -n 1 && echo "SEPARATOR" && git --no-pager -C {} log HEAD --pretty=format:"%ci" -n 1 2>/dev/null)", dir_for_analysis, dir_for_analysis);
 
-    size_t total_commits = 0;  // Initialize commit counter
-    if (!count_output.empty()) {
-        total_commits = std::stoull(count_output);  // Convert string to unsigned long long
+    // Storage for parallel execution results
+    std::string count_result, shortlog_result, dates_result;
+    
+    // Execute three git commands in parallel threads
+    std::thread dates_thread([&]() { dates_result = exec_command(dates_cmd); });
+    std::thread count_thread([&]() { count_result = exec_command(count_cmd); });
+    std::thread shortlog_thread([&]() { shortlog_result = exec_command(shortlog_cmd); });
+    
+    // Wait for all threads to complete
+    dates_thread.join();
+    count_thread.join();
+    shortlog_thread.join();
+    
+    // Parse total commit count
+    size_t total_commits = 0;
+    if (!count_result.empty()) {
+        total_commits = std::stoull(count_result);  // Convert string to unsigned long long
     }
     
-    // Get first and last commit dates using git log
-    std::string first_date = exec_command(
-    dir_for_analysis.empty()
-        ? R"(git log --reverse --format="%ci" 2>/dev/null | head -n 1)"
-        : std::format(R"(git -C {} log --reverse --format="%ci" 2>/dev/null | head -n 1)", dir_for_analysis)
-    );
-
-
-    std::string last_date = exec_command(
-    dir_for_analysis.empty()
-        ? R"(git log -1 --format="%ci" 2>/dev/null)"
-        : std::format(R"(git -C {} log -1 --format="%ci" 2>/dev/null)", dir_for_analysis)
-    );
-    
-    // Trim dates to YYYY-MM-DD format
-    if (first_date.length() >= 10) first_date = first_date.substr(0, 10);
-    if (last_date.length() >= 10) last_date = last_date.substr(0, 10);
+    // Parse first and last commit dates from combined output
+    std::string first_date = "N/A", last_date = "N/A";
+    if (!dates_result.empty()) {
+        size_t separator_pos = dates_result.find("SEPARATOR");
+        if (separator_pos != std::string::npos) {
+            // Extract first date (before separator)
+            first_date = dates_result.substr(0, separator_pos);
+            // Extract last date (after separator)
+            last_date = dates_result.substr(separator_pos + 10);  // 10 = length of "SEPARATOR"
+            
+            // Trim dates to YYYY-MM-DD format and remove newlines
+            if (first_date.length() >= 10) first_date = first_date.substr(0, 10);
+            if (last_date.length() >= 10) last_date = last_date.substr(0, 10);
+            
+            // Clean up any remaining whitespace
+            first_date.erase(first_date.find_last_not_of(" \t\n\r") + 1);
+            last_date.erase(last_date.find_last_not_of(" \t\n\r") + 1);
+        }
+    }
     
     // Handle empty dates (uninitialized repo case)
     if (first_date.empty()) first_date = "N/A";
@@ -86,34 +111,24 @@ void GitModule::print_stats() const {
                             first_date, 
                             last_date);                        
     
-    // Prepare command to get top contributors (limited by contributors_count)
-    size_t limit = contributors_count;
-
-    std::string shortlog_cmd;
-    if (dir_for_analysis.empty()){
-        shortlog_cmd = std::format("git shortlog -sn HEAD 2>/dev/null | head -n {}", limit);
-    }
-    else {
-        shortlog_cmd = std::format("git -C {} shortlog -sn HEAD 2>/dev/null | head -n {}", dir_for_analysis, limit); 
-    }
-
-    std::string shortlog_output = exec_command(shortlog_cmd);
-    
     // Print contributors section header
     std::cout << "☺ Top Contributors" << std::endl;
     
     // Handle case when no contributors found
-    if (shortlog_output.empty()) {
+    if (shortlog_result.empty()) {
         std::cout << "  ╰─ No contributors found\n" << std::endl;
         return;
     }
     
     // Parse contributors output line by line
-    std::stringstream ss(shortlog_output);
+    std::stringstream ss(shortlog_result);
     std::string line;
     size_t processed = 0;  // Tracks number of contributors processed
     
-    while (std::getline(ss, line) && processed < limit) {
+    // Pre-create locale object once for performance
+    static std::locale system_locale("");
+    
+    while (std::getline(ss, line) && processed < contributors_count) {
         if (line.empty()) continue;  // Skip empty lines
         
         // Parse tab-separated line format: " 46988\tbors"
@@ -142,7 +157,7 @@ void GitModule::print_stats() const {
             
             // Format commit count with locale-aware thousands separator
             std::stringstream comm_ss;
-            comm_ss.imbue(std::locale(""));  // Apply system locale
+            comm_ss.imbue(system_locale);  // Use pre-created locale
             comm_ss << commits;
             std::string formatted_commits = comm_ss.str();
             
